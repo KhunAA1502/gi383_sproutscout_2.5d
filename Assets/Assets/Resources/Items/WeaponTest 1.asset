@@ -1,0 +1,18 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f0b9e4dca3b15794280757eb21a071c4, type: 3}
+  m_Name: WeaponTest 1
+  m_EditorClassIdentifier: Assembly-CSharp::ItemData
+  itemName: WeaponTest1
+  icon: {fileID: -3025832048741113203, guid: 9d177e320c2fd494ca52ef53483e680f, type: 3}
+  itemType: 1
+  weaponPrefab: {fileID: 8077317284799078063, guid: 41dfa0a9f3c4b9749ba66bba92105634, type: 3}

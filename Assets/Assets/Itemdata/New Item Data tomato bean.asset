@@ -1,0 +1,18 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f0b9e4dca3b15794280757eb21a071c4, type: 3}
+  m_Name: New Item Data tomato bean
+  m_EditorClassIdentifier: Assembly-CSharp::ItemData
+  itemName: CabbageData
+  icon: {fileID: 6937817954938267909, guid: ba94c5b7201c0824f83bb073b80b50ba, type: 3}
+  itemType: 0
+  weaponPrefab: {fileID: 7681974336939718849, guid: af60b3898565e9d4a9cb91489e8483cc, type: 3}
