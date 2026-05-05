@@ -62,19 +62,18 @@ public class Inventory : MonoBehaviour
 
         Debug.Log("Using item: " + item.itemName);
 
-        // ตัวอย่างการใช้งานตามประเภทไอเทม
         switch (item.itemType)
         {
-            case ItemType.Crop:
-                // สมมติว่ากินพืชแล้วเพิ่มเลือด (ต้องมีระบบ Health ของผู้เล่น)
-                // if (PlayerHealth.Instance != null) PlayerHealth.Instance.Heal(item.healthRestore);
-                Debug.Log("Ate " + item.itemName + " and restored health!");
-                RemoveItem(item, 1);
+            case ItemType.Seed:
+                // เรียกใช้ระบบปลูกพืช (ส่งข้อมูลเมล็ดไปที่มือตัวละคร)
+                FindObjectOfType<PlayerCombat>().EquipItem(item);
+                Debug.Log("Equipped " + item.itemName + " for planting!");
                 break;
 
-            case ItemType.Weapon:
-                // สมมติว่าเปลี่ยนอาวุธ
-                Debug.Log("Equipped " + item.itemName);
+            case ItemType.RangedWeapon:
+                // เรียกใช้เพื่อติดตั้งอาวุธระยะไกล
+                FindObjectOfType<PlayerCombat>().EquipItem(item);
+                Debug.Log("Equipped " + item.itemName + " for combat!");
                 break;
         }
     }

@@ -4,125 +4,118 @@ public class PlayerCombat : MonoBehaviour
 {
     private Weapon currentWeapon;
     private ItemData currentItemData;
-
-    [Header("Weapon Settings")]
-    [SerializeField] private ItemData slot1;
-    [SerializeField] private ItemData slot2;
     public Transform spawnPoint;
+    public LayerMask groundLayer;
 
-    [Header("Drag and Drop Settings")]
-    [SerializeField] private GameObject itemWorldPrefab;
-    private bool isDragging = false;
+    [Header("Placement Settings")]
+    public float checkRadius = 0.5f; // รัศมีเช็คการวางซ้อน
+    public LayerMask obstacleLayer; // Layer สำหรับของที่วางไปแล้ว
 
     void Update()
     {
-        if (Input.GetKeyDown(KeyCode.Alpha1)) EquipFromInventory(slot1);
-        if (Input.GetKeyDown(KeyCode.Alpha2)) EquipFromInventory(slot2);
-
-        HandleDragAndDrop();
+        // เลือกไอเทมจาก Hotbar 1-8
+        for (int i = 0; i < 8; i++)
+        {
+            if (Input.GetKeyDown(KeyCode.Alpha1 + i)) SelectFromHotbar(i);
+        }
 
         if (currentWeapon == null) return;
 
-        if (Input.GetMouseButtonDown(0) && !isDragging)
-            currentWeapon.StartUse();
+        // การใช้งาน (คลิกซ้ายค้างเพื่อชาร์จ/เล็ง)
+        if (Input.GetMouseButton(0)) currentWeapon.StartUse();
 
+        // ปล่อยปุ่มเพื่อพยายามวาง
         if (Input.GetMouseButtonUp(0))
-            currentWeapon.ReleaseUse();
+        {
+            TryPlaceItem();
+        }
 
         currentWeapon.Tick();
     }
 
-    public void EquipFromInventory(ItemData item)
+    private void TryPlaceItem()
     {
-        if (item == null || item.weaponPrefab == null)
+        if (currentWeapon == null || Camera.main == null) return;
+
+        Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+        RaycastHit hit;
+
+        if (Physics.Raycast(ray, out hit, 100f, groundLayer))
         {
-            Debug.LogWarning("สล็อตว่างเปล่า หรือไม่มี Prefab อาวุธ!");
-            return;
-        }
-
-        if (currentWeapon != null)
-            Destroy(currentWeapon.gameObject);
-
-        currentItemData = item;
-        GameObject weaponObj = Instantiate(item.weaponPrefab, spawnPoint);
-        currentWeapon = weaponObj.GetComponent<Weapon>();
-        Debug.Log("ติดตั้งอาวุธเรียบร้อย: " + item.itemName);
-    }
-
-    private void HandleDragAndDrop()
-    {
-        // 1. เช็คตอนคลิกขวา
-        if (Input.GetMouseButtonDown(1))
-        {
-            Vector2 mousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
-            RaycastHit2D hit = Physics2D.Raycast(mousePos, Vector2.zero);
-
-            Debug.Log("คลิกเมาส์ขวาที่ตำแหน่ง: " + mousePos);
-
-            if (hit.collider != null)
+            // --- ขั้นตอนที่ 1: เช็คประเภทพื้นผิว (Tag Check) ---
+            if (CanPlaceHere(hit.collider.gameObject))
             {
-                Debug.Log("คลิกโดนวัตถุชื่อ: " + hit.collider.gameObject.name);
+                // --- ขั้นตอนที่ 2: เช็คพื้นที่ว่าง (Overlap Check) ---
+                Collider[] colliders = Physics.OverlapSphere(hit.point, checkRadius, obstacleLayer);
 
-                if (hit.collider.gameObject == gameObject) // เช็คว่าโดนตัว Player ไหม
+                if (colliders.Length == 0) // พื้นที่ว่างและ Tag ถูกต้อง
                 {
-                    if (currentWeapon != null)
-                    {
-                        isDragging = true;
-                        Debug.Log("<color=green>เริ่มลากอาวุธจากตัวผู้เล่น!</color>");
-                    }
-                    else
-                    {
-                        Debug.Log("<color=yellow>ไม่ได้ถืออาวุธอยู่ เลยลากไม่ได้</color>");
-                    }
+                    PerformPlacement(hit.point);
+                }
+                else
+                {
+                    Debug.Log("ตรงนี้มีของวางอยู่แล้ว!");
+                    currentWeapon.ReleaseUse();
                 }
             }
             else
             {
-                Debug.Log("<color=red>คลิกไม่โดน Collider อะไรเลย (เช็ค Collider ที่ตัว Player ด้วย)</color>");
+                Debug.Log("พื้นผิวนี้ไม่เหมาะกับไอเทมประเภทนี้!");
+                currentWeapon.ReleaseUse();
             }
         }
-
-        // 2. เช็คตอนปล่อยเมาส์
-        if (Input.GetMouseButtonUp(1) && isDragging)
-        {
-            Debug.Log("<color=cyan>ปล่อยเมาส์ เตรียมสร้างของลงพื้น...</color>");
-            isDragging = false;
-            DropWeaponAtMouse();
-        }
+        else { currentWeapon.ReleaseUse(); }
     }
 
-    private void DropWeaponAtMouse()
+    private bool CanPlaceHere(GameObject groundObject)
     {
-        if (currentItemData == null || currentWeapon == null)
+        if (currentItemData == null) return false;
+
+        // เมล็ดผัก (Seed) ต้องวางบน Tag "Dirt" เท่านั้น
+        if (currentItemData.itemType == ItemType.Seed)
         {
-            Debug.LogError("ข้อมูลอาวุธหายไปก่อนจะทิ้งลงพื้น!");
-            return;
+            return groundObject.CompareTag("Dirt");
         }
 
-        if (itemWorldPrefab == null)
+        // อาวุธระยะไกล (RangedWeapon) ต้องวางบน Tag "Platform" เท่านั้น
+        if (currentItemData.itemType == ItemType.RangedWeapon)
         {
-            Debug.LogError("ลืมใส่ Prefab วงกลม C ในช่อง Item World Prefab!");
-            return;
+            return groundObject.CompareTag("Platform");
         }
 
-        Vector3 dropPos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
-        dropPos.z = 0;
+        return true;
+    }
 
-        GameObject itemFloor = Instantiate(itemWorldPrefab, dropPos, Quaternion.identity);
-        ItemWorld itemWorldScript = itemFloor.GetComponent<ItemWorld>();
+    private void PerformPlacement(Vector3 spawnPos)
+    {
+        currentWeapon.ReleaseUse();
+        currentWeapon.transform.SetParent(null);
+        currentWeapon.transform.position = spawnPos + new Vector3(0, 0.1f, 0);
+        currentWeapon.transform.rotation = Quaternion.identity;
 
-        if (itemWorldScript != null)
+        if (currentWeapon is Bean beanSentry) // ถ้าเป็นผัก ให้ตั้งค่าเลือด
         {
-            itemWorldScript.itemData = currentItemData;
-            Debug.Log("<color=green>สร้างของบนพื้นสำเร็จ! ข้อมูลอาวุธ: </color>" + currentItemData.itemName);
-        }
-        else
-        {
-            Debug.LogError("Prefab บนพื้นไม่มีสคริปต์ ItemWorld ติดอยู่!");
+            beanSentry.SetupSentry(currentItemData.vegetableHealth);
         }
 
-        Destroy(currentWeapon.gameObject);
+        currentWeapon.ActivateAutoFire();
         currentWeapon = null;
         currentItemData = null;
+    }
+
+    private void SelectFromHotbar(int index)
+    {
+        ItemData selectedItem = InventoryManager.instance.hotbarInventory[index];
+        if (selectedItem != null) EquipItem(selectedItem);
+    }
+
+    public void EquipItem(ItemData item)
+    {
+        if (item == null || item.weaponPrefab == null) return;
+        if (currentWeapon != null) Destroy(currentWeapon.gameObject);
+
+        currentItemData = item;
+        GameObject weaponObj = Instantiate(item.weaponPrefab, spawnPoint);
+        currentWeapon = weaponObj.GetComponent<Weapon>();
     }
 }

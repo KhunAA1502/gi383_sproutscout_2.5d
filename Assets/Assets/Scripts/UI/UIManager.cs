@@ -1,59 +1,23 @@
 using UnityEngine;
-using UnityEngine.UI;
-using TMPro;
+using UnityEngine.EventSystems;
 
 public class UIManager : MonoBehaviour
 {
-    [SerializeField] private TextMeshProUGUI cropCountText;
-    [SerializeField] private TextMeshProUGUI energyText;
-    [SerializeField] private TextMeshProUGUI statusText;
-    [SerializeField] private Image energyBar;
-    
-    private GameManager gameManager;
+    public static UIManager instance;
 
-    private void Start()
+    void Awake()
     {
-        gameManager = GameManager.Instance;
-    }
-
-    private void Update()
-    {
-        UpdateDisplay();
-    }
-
-    private void UpdateDisplay()
-    {
-        if (gameManager == null) return;
-
-        // Update crop count
-        if (cropCountText != null)
+        // ตรวจสอบว่ามีตัวจัดการ UI อยู่แล้วหรือไม่
+        if (instance == null)
         {
-            cropCountText.text = $"🌾 เก็บเกี่ยว: {gameManager.GetTotalCrops()}";
+            instance = this;
+            // สั่งให้ Object นี้ (และลูกๆ เช่น Canvas) ไม่ถูกทำลายเมื่อเปลี่ยนซีน
+            DontDestroyOnLoad(gameObject);
         }
-
-        // Update energy
-        if (energyText != null)
+        else
         {
-            int energy = Mathf.RoundToInt(gameManager.currentEnergy);
-            int maxEnergy = Mathf.RoundToInt(gameManager.maxEnergy);
-            energyText.text = $"⚡ พลัง: {energy}/{maxEnergy}";
-        }
-
-        // Update energy bar
-        if (energyBar != null)
-        {
-            energyBar.fillAmount = gameManager.GetEnergyPercent();
-        }
-
-        // Update status
-        if (statusText != null)
-        {
-            if (gameManager.GetEnergyPercent() < 0.2f)
-                statusText.text = "😴 พลังต่ำ! ไปพักผ่อน...";
-            else if (gameManager.GetEnergyPercent() > 0.9f)
-                statusText.text = "💪 พลังเต็มแล้ว!";
-            else
-                statusText.text = "🌾 มาปลูกพืชเถอะ!";
+            // ถ้ามีอันเดิมอยู่แล้ว ให้ทำลายอันใหม่ทิ้งเพื่อป้องกัน UI ซ้ำซ้อน
+            Destroy(gameObject);
         }
     }
 }

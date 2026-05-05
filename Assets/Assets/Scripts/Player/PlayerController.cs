@@ -1,7 +1,7 @@
 using UnityEngine;
 using TMPro;
 
-public class PlayerController : Character // สืบทอดจาก Character ที่คุณเขียนมา
+public class PlayerController : Character // สืบทอดจาก Character
 {
     [Header("Player Specific Components")]
     [SerializeField] private TextMeshProUGUI healthText;
@@ -12,11 +12,20 @@ public class PlayerController : Character // สืบทอดจาก Charact
 
     protected override void Awake()
     {
-        instance = this;
+        // --- ส่วนที่เพิ่มเพื่อให้อยู่ข้ามฉาก ---
+        if (instance == null)
+        {
+            instance = this;
+            DontDestroyOnLoad(gameObject); // ทำให้ตัวละครไม่หายไปเมื่อข้ามฉาก
+        }
+        else
+        {
+            Destroy(gameObject); // ถ้ามีตัวละครอยู่แล้ว ให้ลบตัวที่สร้างใหม่ในฉากนี้ทิ้ง
+            return;
+        }
+        // ----------------------------------
 
-        // เรียก Awake ของ Character เพื่อเซตเลือดและเก็บสี Sprite ดั้งเดิม
-        base.Awake();
-
+        base.Awake(); // เก็บสี Sprite และตั้งค่าเลือด[cite: 2]
         movement = GetComponent<PlayerMovement>();
         meleeWeapon = GetComponentInChildren<MeleeWeapon>();
     }
@@ -24,14 +33,13 @@ public class PlayerController : Character // สืบทอดจาก Charact
     private void Start()
     {
         UpdateHealthUI();
-        Debug.Log(currentHP);
     }
 
     private void Update()
     {
-        // ตรวจสอบสถานะจากอาวุธ (ถ้ามี)
-        bool isDashing = (meleeWeapon != null && meleeWeapon.IsDashing);
+        if (instance != this) return; // ป้องกัน Logic ทำงานซ้อนถ้ามีตัวปลอม
 
+        bool isDashing = (meleeWeapon != null && meleeWeapon.IsDashing);
         if (isDashing)
         {
             movement.StopVelocity();
@@ -42,17 +50,13 @@ public class PlayerController : Character // สืบทอดจาก Charact
         movement.Animate();
     }
 
-    // Override ฟังก์ชัน TakeDamage เพื่อเพิ่มการอัปเดต UI ของผู้เล่น
     public override void TakeDamage(int damage)
     {
-        // เรียก Logic เดิมของ Character (ลดเลือด + กะพริบสี)
         base.TakeDamage(damage);
-
-        // เพิ่ม Logic เฉพาะของ Player คือการโชว์เลือดบนจอ
-        UpdateHealthUI();
+        UpdateHealthUI(); // อัปเดตเลือดบนจอ[cite: 2]
     }
 
-    private void UpdateHealthUI()
+    public void UpdateHealthUI()
     {
         if (healthText != null)
         {
@@ -62,10 +66,7 @@ public class PlayerController : Character // สืบทอดจาก Charact
 
     protected override void Die()
     {
-        // ถ้าอยากให้ Player ตายแล้วมี Logic พิเศษ (เช่นเด้งหน้า Game Over) ให้ใส่ที่นี่
         Debug.Log("Player Game Over!");
-
-        // แต่ยังคงเรียกใช้การปิด Object จาก Base Class อยู่
         base.Die();
     }
 }
