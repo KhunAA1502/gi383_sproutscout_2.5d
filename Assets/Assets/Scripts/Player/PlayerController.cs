@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using TMPro;
 
 public class PlayerController : Character // สืบทอดจาก Character
@@ -6,6 +7,9 @@ public class PlayerController : Character // สืบทอดจาก Charact
     [Header("Player Specific Components")]
     [SerializeField] private TextMeshProUGUI healthText;
     [SerializeField] private Transform safeZoneSpawnPoint; // จุดเกิดที่ SafeZone
+
+    [Header("Death Scene")]
+    [SerializeField] private string deathSceneName;
 
     private PlayerMovement movement;
     private MeleeWeapon meleeWeapon;
@@ -74,13 +78,27 @@ public class PlayerController : Character // สืบทอดจาก Charact
 
     protected override void Die()
     {
-        Debug.Log("<color=red>Player Game Over! Respawning...</color>");
+        Debug.Log("<color=red>Player Game Over! Teleporting to another scene...</color>");
 
         // 1. คืนค่าเลือดให้เต็มเพื่อให้เล่นต่อได้[cite: 1]
         currentHP = maxHP;
         UpdateHealthUI();
 
-        // 2. ย้ายตำแหน่งตัวละครไปที่จุด SafeZone
+        // 2. หยุดแรงส่งจากการเคลื่อนที่ค้างไว้
+        if (movement != null)
+        {
+            movement.StopVelocity();
+        }
+
+        // 3. โหลด Scene ใหม่ถ้ามีตั้งชื่อไว้
+        if (!string.IsNullOrWhiteSpace(deathSceneName))
+        {
+            SceneManager.sceneLoaded += OnDeathSceneLoaded;
+            SceneManager.LoadScene(deathSceneName);
+            return;
+        }
+
+        // 4. ถ้าไม่ได้กำหนด Scene ให้คืนตำแหน่งไปยัง SafeZone เดิม
         if (safeZoneSpawnPoint != null)
         {
             transform.position = safeZoneSpawnPoint.position;
@@ -91,8 +109,26 @@ public class PlayerController : Character // สืบทอดจาก Charact
             Debug.LogWarning("ไม่ได้ตั้งค่า SafeZoneSpawnPoint! ตัวละครจะกลับไปที่จุด 0,0,0");
             transform.position = Vector3.zero;
         }
+    }
 
-        // 3. หยุดแรงส่งจากการเคลื่อนที่ค้างไว้
+    private void OnDeathSceneLoaded(Scene scene, LoadSceneMode mode)
+    {
+        SceneManager.sceneLoaded -= OnDeathSceneLoaded;
+
+        if (safeZoneSpawnPoint != null)
+        {
+            transform.position = safeZoneSpawnPoint.position;
+            transform.rotation = safeZoneSpawnPoint.rotation;
+        }
+        else
+        {
+            // ถ้าไม่มี SafeZone ใหม่ ให้ย้ายไปตำแหน่งเริ่มต้นของโลก
+            transform.position = Vector3.zero;
+        }
+
+        // อัปเดต UI อีกครั้งในกรณีที่มี Text ใหม่ใน Scene
+        UpdateHealthUI();
+
         if (movement != null)
         {
             movement.StopVelocity();
