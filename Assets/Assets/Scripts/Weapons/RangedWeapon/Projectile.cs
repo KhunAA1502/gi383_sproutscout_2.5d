@@ -11,7 +11,7 @@ public class Projectile : MonoBehaviour
     public void Launch(Vector3 direction, float distance)
     {
         rb.useGravity = true;
-        float upForce = distance * 0.5f; // ¤Ó¹Ç³áÃ§Â¡ãËé¡ÃÐÊØ¹ÂéÍÂ[cite: 2]
+        float upForce = distance * 0.5f; // ï¿½Ó¹Ç³ï¿½Ã§Â¡ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ø¹ï¿½ï¿½ï¿½ï¿½[cite: 2]
         Vector3 force = (direction * distance) + (Vector3.up * upForce);
 
         rb.AddForce(force, ForceMode.Impulse);
@@ -20,15 +20,15 @@ public class Projectile : MonoBehaviour
 
     private void Update()
     {
-        if (rb.velocity != Vector3.zero)
+        if (rb.linearVelocity != Vector3.zero)
         {
-            transform.forward = rb.velocity.normalized;
+            transform.forward = rb.linearVelocity.normalized;
         }
     }
 
     private void OnTriggerEnter(Collider other)
     {
-        // àªç¤¡ÒÃª¹¡Ñº Interface ËÃ×Í Tag ¢Í§ÈÑµÃÙ[cite: 2]
+        // ï¿½ç¤¡ï¿½Ãªï¿½ï¿½Ñº Interface ï¿½ï¿½ï¿½ï¿½ Tag ï¿½Í§ï¿½Ñµï¿½ï¿½[cite: 2]
         if (other.TryGetComponent(out IDamageable target))
         {
             target.TakeDamage(damage);
@@ -36,7 +36,7 @@ public class Projectile : MonoBehaviour
         }
         else if (other.gameObject.layer == LayerMask.NameToLayer("Ground"))
         {
-            Destroy(gameObject); // ª¹¾×é¹áÅéÇËÒÂä»[cite: 2]
+            Destroy(gameObject); // ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½[cite: 2]
         }
     }
 }

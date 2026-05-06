@@ -34,7 +34,7 @@ public class PlayerMovement : MonoBehaviour
 
         // ใช้ Rigidbody ควบคุมการเคลื่อนที่ทั้งแกน X และ Z
         // ส่วนแกน Y ให้ใช้ความเร็วเดิมของ Rigidbody (เผื่อกรณีมีแรงโน้มถ่วงหรือการตกจากที่สูง)
-        rb.velocity = new Vector3(input.x * moveSpeed, rb.velocity.y, input.z * moveSpeed);
+        rb.linearVelocity = new Vector3(input.x * moveSpeed, rb.linearVelocity.y, input.z * moveSpeed);
     }
     
     public void Animate()
@@ -48,6 +48,6 @@ public class PlayerMovement : MonoBehaviour
     public void StopVelocity()
     {
         input = Vector3.zero;
-        rb.velocity = Vector3.zero;
+        rb.linearVelocity = Vector3.zero;
     }
 }
