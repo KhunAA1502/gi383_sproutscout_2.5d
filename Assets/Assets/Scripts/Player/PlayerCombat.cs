@@ -8,12 +8,12 @@ public class PlayerCombat : MonoBehaviour
     public LayerMask groundLayer;
 
     [Header("Placement Settings")]
-    public float checkRadius = 0.5f; // ÃÑÈÁÕàªç¤¡ÒÃÇÒ§«éÍ¹
-    public LayerMask obstacleLayer; // Layer ÊÓËÃÑº¢Í§·ÕèÇÒ§ä»áÅéÇ
+    public float checkRadius = 0.5f; // ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ç¤¡ï¿½ï¿½ï¿½Ò§ï¿½ï¿½Í¹
+    public LayerMask obstacleLayer; // Layer ï¿½ï¿½ï¿½ï¿½Ñºï¿½Í§ï¿½ï¿½ï¿½ï¿½Ò§ï¿½ï¿½ï¿½ï¿½ï¿½
 
     void Update()
     {
-        // àÅ×Í¡äÍà·Á¨Ò¡ Hotbar 1-8
+        // ï¿½ï¿½ï¿½Í¡ï¿½ï¿½ï¿½ï¿½ï¿½Ò¡ Hotbar 1-8
         for (int i = 0; i < 8; i++)
         {
             if (Input.GetKeyDown(KeyCode.Alpha1 + i)) SelectFromHotbar(i);
@@ -21,10 +21,10 @@ public class PlayerCombat : MonoBehaviour
 
         if (currentWeapon == null) return;
 
-        // ¡ÒÃãªé§Ò¹ (¤ÅÔ¡«éÒÂ¤éÒ§à¾×èÍªÒÃì¨/àÅç§)
+        // ï¿½ï¿½ï¿½ï¿½ï¿½Ò¹ (ï¿½ï¿½Ô¡ï¿½ï¿½ï¿½Â¤ï¿½Ò§ï¿½ï¿½ï¿½Íªï¿½ï¿½ï¿½/ï¿½ï¿½ï¿½)
         if (Input.GetMouseButton(0)) currentWeapon.StartUse();
 
-        // »ÅèÍÂ»ØèÁà¾×èÍ¾ÂÒÂÒÁÇÒ§
+        // ï¿½ï¿½ï¿½ï¿½Â»ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Í¾ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ò§
         if (Input.GetMouseButtonUp(0))
         {
             TryPlaceItem();
@@ -42,25 +42,25 @@ public class PlayerCombat : MonoBehaviour
 
         if (Physics.Raycast(ray, out hit, 100f, groundLayer))
         {
-            // --- ¢Ñé¹µÍ¹·Õè 1: àªç¤»ÃĞàÀ·¾×é¹¼ÔÇ (Tag Check) ---
+            // --- ï¿½ï¿½é¹µÍ¹ï¿½ï¿½ï¿½ 1: ï¿½ç¤»ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½é¹¼ï¿½ï¿½ (Tag Check) ---
             if (CanPlaceHere(hit.collider.gameObject))
             {
-                // --- ¢Ñé¹µÍ¹·Õè 2: àªç¤¾×é¹·ÕèÇèÒ§ (Overlap Check) ---
+                // --- ï¿½ï¿½é¹µÍ¹ï¿½ï¿½ï¿½ 2: ï¿½ç¤¾ï¿½é¹·ï¿½ï¿½ï¿½ï¿½Ò§ (Overlap Check) ---
                 Collider[] colliders = Physics.OverlapSphere(hit.point, checkRadius, obstacleLayer);
 
-                if (colliders.Length == 0) // ¾×é¹·ÕèÇèÒ§áÅĞ Tag ¶Ù¡µéÍ§
+                if (colliders.Length == 0) // ï¿½ï¿½é¹·ï¿½ï¿½ï¿½ï¿½Ò§ï¿½ï¿½ï¿½ Tag ï¿½Ù¡ï¿½ï¿½Í§
                 {
                     PerformPlacement(hit.point);
                 }
                 else
                 {
-                    Debug.Log("µÃ§¹ÕéÁÕ¢Í§ÇÒ§ÍÂÙèáÅéÇ!");
+                    Debug.Log("ï¿½Ã§ï¿½ï¿½ï¿½ï¿½Õ¢Í§ï¿½Ò§ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½!");
                     currentWeapon.ReleaseUse();
                 }
             }
             else
             {
-                Debug.Log("¾×é¹¼ÔÇ¹ÕéäÁèàËÁÒĞ¡ÑºäÍà·Á»ÃĞàÀ·¹Õé!");
+                Debug.Log("ï¿½ï¿½é¹¼ï¿½Ç¹ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ğ¡Ñºï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½!");
                 currentWeapon.ReleaseUse();
             }
         }
@@ -71,13 +71,13 @@ public class PlayerCombat : MonoBehaviour
     {
         if (currentItemData == null) return false;
 
-        // àÁÅç´¼Ñ¡ (Seed) µéÍ§ÇÒ§º¹ Tag "Dirt" à·èÒ¹Ñé¹
+        // ï¿½ï¿½ï¿½ç´¼Ñ¡ (Seed) ï¿½ï¿½Í§ï¿½Ò§ï¿½ï¿½ Tag "Dirt" ï¿½ï¿½Ò¹ï¿½ï¿½
         if (currentItemData.itemType == ItemType.Seed)
         {
             return groundObject.CompareTag("Dirt");
         }
 
-        // ÍÒÇØ¸ÃĞÂĞä¡Å (RangedWeapon) µéÍ§ÇÒ§º¹ Tag "Platform" à·èÒ¹Ñé¹
+        // ï¿½ï¿½ï¿½Ø¸ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ (RangedWeapon) ï¿½ï¿½Í§ï¿½Ò§ï¿½ï¿½ Tag "Platform" ï¿½ï¿½Ò¹ï¿½ï¿½
         if (currentItemData.itemType == ItemType.RangedWeapon)
         {
             return groundObject.CompareTag("Platform");
@@ -93,7 +93,7 @@ public class PlayerCombat : MonoBehaviour
         currentWeapon.transform.position = spawnPos + new Vector3(0, 0.1f, 0);
         currentWeapon.transform.rotation = Quaternion.identity;
 
-        if (currentWeapon is Bean beanSentry) // ¶éÒà»ç¹¼Ñ¡ ãËéµÑé§¤èÒàÅ×Í´
+        if (currentWeapon is Bean beanSentry) // ï¿½ï¿½ï¿½ï¿½ç¹¼Ñ¡ ï¿½ï¿½ï¿½ï¿½é§¤ï¿½ï¿½ï¿½ï¿½ï¿½Í´
         {
             beanSentry.SetupSentry(currentItemData.vegetableHealth);
         }
@@ -112,7 +112,12 @@ public class PlayerCombat : MonoBehaviour
     public void EquipItem(ItemData item)
     {
         if (item == null || item.weaponPrefab == null) return;
-        if (currentWeapon != null) Destroy(currentWeapon.gameObject);
+
+        // à¸¥à¹‰à¸²à¸‡à¹„à¸­à¹€à¸—à¹‡à¸¡à¹€à¸à¹ˆà¸²à¸—à¸±à¹‰à¸‡à¸«à¸¡à¸”à¸—à¸µà¹ˆà¸­à¸¢à¸¹à¹ˆà¹ƒà¸™à¸ˆà¸¸à¸”à¸–à¸·à¸­à¸­à¸­à¸à¸à¹ˆà¸­à¸™ (à¸›à¹‰à¸­à¸‡à¸à¸±à¸™à¸à¸²à¸£à¹à¸ªà¸”à¸‡à¸œà¸¥à¸‹à¹‰à¸­à¸™à¸à¸±à¸™)
+        foreach (Transform child in spawnPoint)
+        {
+            Destroy(child.gameObject);
+        }
 
         currentItemData = item;
         GameObject weaponObj = Instantiate(item.weaponPrefab, spawnPoint);
