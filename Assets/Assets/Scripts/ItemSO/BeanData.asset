@@ -13,9 +13,9 @@ MonoBehaviour:
   m_Name: BeanData
   m_EditorClassIdentifier: Assembly-CSharp::ItemData
   itemName: BeanData
-  icon: {fileID: 21300000, guid: fd3f71e85b12fb04eb839c378ffba5ef, type: 3}
+  icon: {fileID: 21300000, guid: 0fb79e27a435e7e42ba380d9257eaa90, type: 3}
   itemType: 0
-  vegetableHealth: 0
+  vegetableHealth: 3
   timeToSprout: 5
   timeToMature: 10
   seedModelPrefab: {fileID: 2805607695158678134, guid: 2f00e91bbd383a04ea5dad80203f84dd, type: 3}
