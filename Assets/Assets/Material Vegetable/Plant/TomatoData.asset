@@ -1,0 +1,19 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 78cf742a65c6dd748b7686a55276d7bd, type: 3}
+  m_Name: TomatoData
+  m_EditorClassIdentifier: Assembly-CSharp::PlantData
+  plantName: Tomato
+  seedModel: {fileID: 5608129419652174870, guid: 9f500de77174e824fa37ec8e0282d1f0, type: 3}
+  seedlingModel: {fileID: 3650036321744671875, guid: 79bb98b899b0f164e8415f45507c084a, type: 3}
+  matureModel: {fileID: 5762511973613081023, guid: 8deb68e916209c745885a708a266d8aa, type: 3}
+  harvestItem: {fileID: 11400000, guid: 8a0d1ebcacd182543a5e11d07c5051af, type: 2}

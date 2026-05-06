@@ -18,7 +18,7 @@ MonoBehaviour:
   vegetableHealth: 3
   timeToSprout: 5
   timeToMature: 10
-  seedModelPrefab: {fileID: 0}
-  sproutModelPrefab: {fileID: 0}
-  matureModelPrefab: {fileID: 0}
+  seedModelPrefab: {fileID: 7209121024120317836, guid: 2f00e91bbd383a04ea5dad80203f84dd, type: 3}
+  sproutModelPrefab: {fileID: 3360270526899842790, guid: e48038302aa9b6547aba97b1a16c0d25, type: 3}
+  matureModelPrefab: {fileID: 3823923127662936821, guid: 733c4423176fbe14b8f46f5c786cf769, type: 3}
   weaponPrefab: {fileID: 5500234150503826865, guid: 4b028617f8d14d7468dc4983f62e9a72, type: 3}

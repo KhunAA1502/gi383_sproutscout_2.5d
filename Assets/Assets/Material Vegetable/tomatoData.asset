@@ -12,9 +12,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f0b9e4dca3b15794280757eb21a071c4, type: 3}
   m_Name: tomatoData
   m_EditorClassIdentifier: Assembly-CSharp::ItemData
-  itemName: CabbageData
-  icon: {fileID: 6937817954938267909, guid: ba94c5b7201c0824f83bb073b80b50ba, type: 3}
+  itemName: TomatoData
+  icon: {fileID: 21300000, guid: e70255cd62f99a047a99a75992dca89f, type: 3}
   itemType: 0
-  monsterPrefab: {fileID: 4318914583180886170, guid: 254f51f733b5d924898c953d898e098e, type: 3}
-  healthRestore: 0
-  weaponPrefab: {fileID: 4318914583180886170, guid: 254f51f733b5d924898c953d898e098e, type: 3}
+  vegetableHealth: 0
+  timeToSprout: 5
+  timeToMature: 10
+  seedModelPrefab: {fileID: 5608129419652174870, guid: 9f500de77174e824fa37ec8e0282d1f0, type: 3}
+  sproutModelPrefab: {fileID: 3650036321744671875, guid: 79bb98b899b0f164e8415f45507c084a, type: 3}
+  matureModelPrefab: {fileID: 5762511973613081023, guid: 8deb68e916209c745885a708a266d8aa, type: 3}
+  weaponPrefab: {fileID: 8253695194940387898, guid: 8605741d35629174e9d2f2dc933ba6ed, type: 3}

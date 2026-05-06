@@ -3,28 +3,44 @@
 public class PlantController : MonoBehaviour
 {
     [Header("Settings")]
-    public ItemData cabbageItemData; // ไฟล์ ItemData (ผัก) ที่ลากใส่
-    public float timePerStage = 3f;
-    public float interactDistance = 10f;
+    public PlantData data; // เปลี่ยนมาใช้ ScriptableObject เพื่อให้ปลูกผักได้หลากหลายชนิด
+    public float timePerStage = 5f; // ปรับเป็น 5 วินาทีตามที่ต้องการ
+    public float interactDistance = 3f; // ระยะที่เหมาะสมสำหรับเกม 2.5D
 
-    [Header("Visual Models")]
-    public GameObject seedModel;
-    public GameObject seedlingModel;
-    public GameObject matureModel;
+    public Vector2 gridPosition; // เพิ่มตัวแปรเก็บพิกัดตัวเอง
+    public PlantSpawnerUI spawner; // เพิ่มตัวแปรอ้างอิงถึงตัวคุมการวาง
 
+    private GameObject currentVisual;
     private int currentStage = 0; // 0=Seed, 1=Seedling, 2=Mature
     private float timer;
     private Transform player;
+    private bool isGrown = false;
+
+    // ฟังก์ชัน Init สำหรับรับข้อมูลจาก Spawner เมื่อปลูก
+    public void Init(PlantData plantData)
+    {
+        data = plantData;
+        currentStage = 0;
+        timer = 0f;
+        isGrown = false;
+        UpdateVisuals();
+    }
 
     void Start()
     {
-        player = GameObject.FindGameObjectWithTag("Player").transform;
-        UpdateVisuals();
+        // ค้นหา Player ในฉาก
+        GameObject playerObj = GameObject.FindGameObjectWithTag("Player");
+        if (playerObj != null) player = playerObj.transform;
+        
+        if (data != null)
+        {
+            UpdateVisuals();
+        }
     }
 
     void Update()
     {
-        // 1. ระบบเติบโต
+        // 1. ระบบเติบโต (ทำงาน 2 ขั้น ขั้นละ 5 วินาที)
         if (currentStage < 2)
         {
             timer += Time.deltaTime;
@@ -33,11 +49,13 @@ public class PlantController : MonoBehaviour
                 currentStage++;
                 timer = 0;
                 UpdateVisuals();
+                
+                if (currentStage == 2) isGrown = true;
             }
         }
 
         // 2. ระบบกดเก็บผัก (กด E)
-        if (Input.GetKeyDown(KeyCode.E))
+        if (Input.GetKeyDown(KeyCode.E) && player != null)
         {
             CheckInteraction();
         }
@@ -45,9 +63,35 @@ public class PlantController : MonoBehaviour
 
     void UpdateVisuals()
     {
-        seedModel.SetActive(currentStage == 0);
-        seedlingModel.SetActive(currentStage == 1);
-        matureModel.SetActive(currentStage == 2);
+        if (currentVisual != null)
+        {
+            Destroy(currentVisual);
+        }
+
+        if (data == null)
+        {
+            Debug.LogWarning("[PlantController] ไม่มีข้อมูล PlantData ให้แสดง visual");
+            return;
+        }
+
+        GameObject stagePrefab = null;
+        if (currentStage == 0) stagePrefab = data.seedModel;
+        else if (currentStage == 1) stagePrefab = data.seedlingModel;
+        else if (currentStage == 2) stagePrefab = data.matureModel;
+
+        if (stagePrefab == null)
+        {
+            Debug.LogWarning($"[PlantController] ไม่มี prefab สำหรับ stage {currentStage} ของผัก {data.plantName}");
+            return;
+        }
+
+        currentVisual = Instantiate(stagePrefab, transform);
+        currentVisual.transform.localPosition = Vector3.zero;
+        currentVisual.transform.localRotation = Quaternion.identity;
+        currentVisual.transform.localScale = Vector3.one;
+
+        Debug.Log($"Current Visual Stage: {currentStage}");
+        Debug.Log($"[UpdateVisuals] สร้าง model stage {currentStage} สำเร็จ: {stagePrefab.name}");
     }
 
     void CheckInteraction()
@@ -56,36 +100,29 @@ public class PlantController : MonoBehaviour
 
         if (distance <= interactDistance)
         {
-            if (currentStage == 2) // ต้องโตเต็มที่ (Mature) ถึงจะเก็บได้
+            if (isGrown) 
             {
                 CollectPlant();
             }
             else
             {
-                Debug.Log("ผักยังไม่โตเต็มที่! รออีกสักพัก");
+                Debug.Log($"{data?.plantName ?? "ผัก"} ยังไม่โตเต็มที่!");
             }
         }
     }
 
     void CollectPlant()
+{
+    InventoryManager inventory = FindFirstObjectByType<InventoryManager>();
+
+    if (inventory != null && data != null)
     {
-        if (cabbageItemData != null)
-        {
-            // 1. หาตัว Inventory ในฉาก (สมมติชื่อสคริปต์ว่า InventoryManager)
-            InventoryManager inventory = FindFirstObjectByType<InventoryManager>();
+        inventory.AddItem(data.harvestItem);
+        
+        // คืนพื้นที่ว่างให้ Grid ก่อนทำลายตัวเอง
+        if (spawner != null) spawner.FreeTile(gridPosition);
 
-            if (inventory != null)
-            {
-                // 2. ส่งไฟล์ ItemData เข้าไปในฟังก์ชันเพิ่มของ (เช่น AddItem)
-                inventory.AddItem(cabbageItemData);
-
-                Debug.Log("ส่ง " + cabbageItemData.itemName + " เข้า Inventory แล้ว!");
-                Destroy(gameObject); // ทำลายผักทิ้งหลังจากส่งข้อมูลเสร็จ
-            }
-            else
-            {
-                Debug.LogError("หา InventoryManager ไม่เจอในฉาก!");
-            }
-        }
+        Destroy(gameObject); 
     }
+}
 }
