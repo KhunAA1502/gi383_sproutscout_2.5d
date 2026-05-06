@@ -5,40 +5,65 @@ public class RangedWeapon : Weapon
     [Header("Prefabs & Visuals")]
     public GameObject projectilePrefab;
     public GameObject previewPrefab;
-    public LineRenderer line;
     public Transform throwPoint;
 
     [Header("Sentry Settings")]
     public float detectRange = 10f;
-    public float fireRate = 1.0f; // ปรับให้ช้าลงนิดนึงเพื่อให้อ่าน Log ทัน
+    public float fireRate = 1.0f; 
     public LayerMask groundLayer;
 
     protected bool isPlaced = false;
     protected bool isCharging = false;
     protected GameObject currentPreview;
+    protected float fixedY; 
     private float nextFireTime;
 
     public override void StartUse()
     {
         if (isPlaced) return;
         isCharging = true;
+        
         if (previewPrefab != null && currentPreview == null)
         {
             currentPreview = Instantiate(previewPrefab, transform.position, Quaternion.identity);
+            Debug.Log("<color=white>PREVIEW:</color> สร้างตัวเล็งแล้ว");
         }
     }
 
     public override void ReleaseUse()
     {
         isCharging = false;
+        
+        // --- ส่วนที่เพิ่ม: ล้าง Preview แบบถอนรากถอนโคน ---
         if (currentPreview != null) Destroy(currentPreview);
-        if (line != null) line.positionCount = 0;
+        
+        // ค้นหาและทำลาย Preview ที่อาจจะค้างอยู่ในฉาก (เผื่อกรณี Instantiate ซ้อน)
+        GameObject[] orphans = GameObject.FindObjectsOfType<GameObject>();
+        foreach (GameObject obj in orphans)
+        {
+            if (obj.name.Contains("Preview Prefab") || obj.name.Contains("Preview(Clone)"))
+            {
+                Destroy(obj);
+            }
+        }
+        
+        Debug.Log("<color=white>PREVIEW:</color> ล้างตัวเล็งทั้งหมดในฉากแล้ว");
     }
 
     public override void ActivateAutoFire()
     {
         isPlaced = true;
-        Debug.Log("<color=green>Ranged Weapon:</color> เริ่มระบบยิงสุ่ม!"); 
+        isCharging = false;
+        
+        ReleaseUse(); // เรียกใช้เพื่อล้าง Preview ทั้งหมด
+
+        fixedY = transform.position.y; 
+        Debug.Log("<color=green>SUCCESS:</color> วางตัวจริงลงบนพื้นเรียบร้อยแล้ว!"); 
+    }
+
+    private void Update()
+    {
+        if (isPlaced) Tick();
     }
 
     public override void Tick()
@@ -46,28 +71,14 @@ public class RangedWeapon : Weapon
         if (isPlaced)
         {
             HandleRandomFire();
-            return;
         }
-
-        if (isCharging)
+        else if (isCharging)
         {
             UpdateAimPreview();
         }
     }
 
-    private void HandleRandomFire()
-    {
-        if (Time.time >= nextFireTime)
-        {
-            // สุ่มทิศทางมั่วๆ 360 องศา[cite: 1]
-            float randomAngle = Random.Range(0f, 360f);
-            Vector3 randomDirection = Quaternion.Euler(0, randomAngle, 0) * Vector3.forward;
-            float randomDistance = Random.Range(2f, detectRange);
-
-            FireProjectile(randomDirection, randomDistance);
-            nextFireTime = Time.time + fireRate;
-        }
-    }
+    private void HandleRandomFire() { }
 
     protected virtual void FireProjectile(Vector3 direction, float distance)
     {
@@ -82,11 +93,13 @@ public class RangedWeapon : Weapon
 
     private void UpdateAimPreview()
     {
+        if (currentPreview == null) return;
+
         Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
         RaycastHit hit;
         if (Physics.Raycast(ray, out hit, 100f, groundLayer))
         {
-            if (currentPreview != null) currentPreview.transform.position = hit.point;
+            currentPreview.transform.position = hit.point;
         }
     }
 }
