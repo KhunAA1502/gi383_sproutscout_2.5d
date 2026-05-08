@@ -7,6 +7,8 @@ TagManager:
   - Enemy
   - Ground
   - Farmland
+  - Dirt
+  - Platform
   layers:
   - Default
   - TransparentFX
