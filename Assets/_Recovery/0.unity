@@ -259,7 +259,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PlantSpawnerUI
   plantPrefab: {fileID: 3843146644299180952, guid: 07399019ca7c7934fbeb88850963a0c8, type: 3}
-  gridSize: 1
 --- !u!4 &146775972
 Transform:
   m_ObjectHideFlags: 0
@@ -511,7 +510,7 @@ PrefabInstance:
       addedObject: {fileID: 288791711}
     - targetCorrespondingSourceObject: {fileID: 4389765043622299808, guid: 503c0520403d5f84b998a3f683dd3b58, type: 3}
       insertIndex: -1
-      addedObject: {fileID: 288791712}
+      addedObject: {fileID: 288791716}
     - targetCorrespondingSourceObject: {fileID: 7328170898592315991, guid: 503c0520403d5f84b998a3f683dd3b58, type: 3}
       insertIndex: -1
       addedObject: {fileID: 288791703}
@@ -608,14 +607,14 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 288791698}
-  m_Enabled: 0
+  m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 19b9a0b28d214194a86f63c1e5c73e9d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::InventoryDisplay
   inventoryPanel: {fileID: 337142282}
   eventSystem: {fileID: 0}
---- !u!114 &288791712
+--- !u!114 &288791716
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -629,13 +628,12 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::PlayerFarming
   groundLayer:
     serializedVersion: 2
-    m_Bits: 256
+    m_Bits: 64
   checkRadius: 0.5
   obstacleLayer:
     serializedVersion: 2
     m_Bits: 0
   placementOffset: 0
-  gridSize: 1
 --- !u!1001 &295346121
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -1944,7 +1942,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PlantSpawnerUI
   plantPrefab: {fileID: 910310073723754275, guid: 6a72f19986b2d3d40aea46e6cf6bd61a, type: 3}
-  gridSize: 1
 --- !u!4 &580508905
 Transform:
   m_ObjectHideFlags: 0
@@ -3227,7 +3224,7 @@ MonoBehaviour:
   - item: {fileID: 0}
     amount: 0
   hotbarInventory:
-  - item: {fileID: 11400000, guid: 92c869a79ca5745bbabe267df0cc74bb, type: 2}
+  - item: {fileID: 11400000, guid: adf6fdace01ceca499f3ec7b2b673004, type: 2}
     amount: 0
   - item: {fileID: 0}
     amount: 0
@@ -3270,7 +3267,7 @@ GameObject:
   - component: {fileID: 979765828}
   - component: {fileID: 979765827}
   - component: {fileID: 979765826}
-  m_Layer: 8
+  m_Layer: 6
   m_Name: Farmland (1)
   m_TagString: Farmland
   m_Icon: {fileID: 0}
@@ -3296,7 +3293,7 @@ MeshCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 5
-  m_Convex: 1
+  m_Convex: 0
   m_CookingOptions: 30
   m_Mesh: {fileID: 10209, guid: 0000000000000000e000000000000000, type: 0}
 --- !u!23 &979765827
@@ -5144,7 +5141,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PlantSpawnerUI
   plantPrefab: {fileID: 6425913787188970549, guid: f0f56cdb758662942ab705aa4871a0c0, type: 3}
-  gridSize: 1
 --- !u!4 &1550725206
 Transform:
   m_ObjectHideFlags: 0
@@ -6102,7 +6098,7 @@ GameObject:
   - component: {fileID: 1763009527}
   - component: {fileID: 1763009526}
   - component: {fileID: 1763009525}
-  m_Layer: 8
+  m_Layer: 6
   m_Name: Farmland
   m_TagString: Farmland
   m_Icon: {fileID: 0}
@@ -6128,7 +6124,7 @@ MeshCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 5
-  m_Convex: 1
+  m_Convex: 0
   m_CookingOptions: 30
   m_Mesh: {fileID: 10209, guid: 0000000000000000e000000000000000, type: 0}
 --- !u!23 &1763009526
@@ -6233,7 +6229,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PlantSpawnerUI
   plantPrefab: {fileID: 910310073723754275, guid: 812c6489cb64eeb47b1a124a43414228, type: 3}
-  gridSize: 1
 --- !u!4 &1794581198
 Transform:
   m_ObjectHideFlags: 0
@@ -6924,22 +6919,6 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
-    - target: {fileID: 113090550476430084, guid: c97ecdd7fdd975a4f8b21c3f64054328, type: 3}
-      propertyPath: m_IsActive
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 1614531964697919696, guid: c97ecdd7fdd975a4f8b21c3f64054328, type: 3}
-      propertyPath: m_IsActive
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 2883016879481527466, guid: c97ecdd7fdd975a4f8b21c3f64054328, type: 3}
-      propertyPath: m_IsActive
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 3057150877669822392, guid: c97ecdd7fdd975a4f8b21c3f64054328, type: 3}
-      propertyPath: m_IsActive
-      value: 1
-      objectReference: {fileID: 0}
     - target: {fileID: 4340233401912049209, guid: c97ecdd7fdd975a4f8b21c3f64054328, type: 3}
       propertyPath: m_Name
       value: Canvas
@@ -7024,10 +7003,6 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 7226815037798011109, guid: c97ecdd7fdd975a4f8b21c3f64054328, type: 3}
-      propertyPath: m_IsActive
-      value: 1
-      objectReference: {fileID: 0}
     - target: {fileID: 7327524270849418460, guid: c97ecdd7fdd975a4f8b21c3f64054328, type: 3}
       propertyPath: m_UiScaleMode
       value: 1
@@ -7043,14 +7018,6 @@ PrefabInstance:
     - target: {fileID: 7327524270849418460, guid: c97ecdd7fdd975a4f8b21c3f64054328, type: 3}
       propertyPath: m_ReferenceResolution.y
       value: 1080
-      objectReference: {fileID: 0}
-    - target: {fileID: 8033659321043808241, guid: c97ecdd7fdd975a4f8b21c3f64054328, type: 3}
-      propertyPath: m_IsActive
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 9141674790723756629, guid: c97ecdd7fdd975a4f8b21c3f64054328, type: 3}
-      propertyPath: m_IsActive
-      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []

@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 6628062947069289201}
   - component: {fileID: 3644269661040318271}
   m_Layer: 0
-  m_Name: PlantPrefab
+  m_Name: Tomato_Prefab
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -45,12 +45,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d3daf5d85a448fb4eaa5250576ca2913, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PlantController
-  data: {fileID: 11400000, guid: 63b0570d19961f3498796807fc52af4b, type: 2}
+  data: {fileID: 11400000, guid: 6ac6e14a07630c94b8a5f7ab3c8cfce9, type: 2}
   timePerStage: 5
   interactDistance: 10
-  seedModel: {fileID: 2805607695158678134, guid: 2f00e91bbd383a04ea5dad80203f84dd, type: 3}
-  seedlingModel: {fileID: 8992961292487196173, guid: e48038302aa9b6547aba97b1a16c0d25, type: 3}
-  matureModel: {fileID: 3823923127662936821, guid: 733c4423176fbe14b8f46f5c786cf769, type: 3}
+  seedModel: {fileID: 5608129419652174870, guid: 9f500de77174e824fa37ec8e0282d1f0, type: 3}
+  seedlingModel: {fileID: 3650036321744671875, guid: 79bb98b899b0f164e8415f45507c084a, type: 3}
+  matureModel: {fileID: 6396474402566754925, guid: a750683ec06e3c740981a9bcc2b79002, type: 3}
   gridPosition: {x: 0, y: 0}
   spawner: {fileID: 0}
 --- !u!65 &3644269661040318271

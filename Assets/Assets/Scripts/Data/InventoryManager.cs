@@ -6,8 +6,8 @@ public class InventoryManager : MonoBehaviour
     public static InventoryManager instance;
 
     [Header("Data Storage")]
-    public List<ItemData> mainInventory = new List<ItemData>(new ItemData[20]); // 20 ช่องบน
-    public List<ItemData> hotbarInventory = new List<ItemData>(new ItemData[8]);  // 8 ช่องล่าง
+    public List<InventorySlot> mainInventory = new List<InventorySlot>(); // 20 ช่องบน
+    public List<InventorySlot> hotbarInventory = new List<InventorySlot>();  // 8 ช่องล่าง
 
     void Awake()
     {
@@ -20,18 +20,51 @@ public class InventoryManager : MonoBehaviour
         {
             Destroy(gameObject);
         }
+
+        // Initialize slots
+        for (int i = 0; i < 20; i++)
+        {
+            mainInventory.Add(new InventorySlot());
+        }
+        for (int i = 0; i < 8; i++)
+        {
+            hotbarInventory.Add(new InventorySlot());
+        }
     }
 
-    public void AddItem(ItemData item)
+    public void AddItem(ItemData item, int amount = 1)
     {
-        // เพิ่มไอเทมลงในช่องว่างแรกที่เจอ
-        for (int i = 0; i < hotbarInventory.Count; i++)
+        // First try to stack in hotbar
+        foreach (var slot in hotbarInventory)
         {
-            if (hotbarInventory[i] == null) { hotbarInventory[i] = item; return; }
+            if (slot.item == item && slot.amount > 0)
+            {
+                slot.amount += amount;
+                UpdateAllSlots();
+                return;
+            }
         }
-        for (int i = 0; i < mainInventory.Count; i++)
+
+        // Then try to add to empty slot in hotbar
+        foreach (var slot in hotbarInventory)
         {
-            if (mainInventory[i] == null) { mainInventory[i] = item; return; }
+            if (slot.item == null)
+            {
+                slot.item = item;
+                slot.amount = amount;
+                UpdateAllSlots();
+                return;
+            }
+        }
+
+        Debug.LogWarning("[InventoryManager] hotbar เต็ม: ไม่มีที่ว่างสำหรับเพิ่มไอเท็ม " + item.itemName);
+    }
+
+    private void UpdateAllSlots()
+    {
+        foreach (var slot in FindObjectsOfType<ItemSlot>())
+        {
+            slot.UpdateSlotUI();
         }
     }
 }
