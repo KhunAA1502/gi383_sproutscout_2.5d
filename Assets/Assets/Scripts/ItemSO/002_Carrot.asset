@@ -1,0 +1,24 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f0b9e4dca3b15794280757eb21a071c4, type: 3}
+  m_Name: 002_Carrot
+  m_EditorClassIdentifier: Assembly-CSharp::ItemData
+  itemName: Carrot
+  icon: {fileID: 21300000, guid: 4a2f7345cac53b947845b3356a1358dc, type: 3}
+  itemType: 0
+  vegetableHealth: 10
+  timeToSprout: 5
+  timeToMature: 10
+  seedModelPrefab: {fileID: 7843166171596043671, guid: 332fc50c6efd2b442a2b746efaf54f41, type: 3}
+  sproutModelPrefab: {fileID: 622723944121591001, guid: d7073a1f71fa9774c847e6ab5a2905d5, type: 3}
+  matureModelPrefab: {fileID: 7549984223883188029, guid: a608930eb8778414495a9e3a5e8c4a41, type: 3}
+  weaponPrefab: {fileID: 5305954936156836159, guid: 78410b20eae32e042907233b81d45645, type: 3}
