@@ -19,6 +19,7 @@ public class PlantController : MonoBehaviour
     // ฟังก์ชัน Init สำหรับรับข้อมูลจาก Spawner เมื่อปลูก
     public void Init(PlantData plantData)
     {
+        Debug.Log($"[PlantController] Init() เรียกใช้งาน plantData={plantData?.plantName ?? "null"}");
         data = plantData;
         currentStage = 0;
         timer = 0f;
@@ -40,11 +41,12 @@ public class PlantController : MonoBehaviour
 
     void Update()
     {
-        // 1. ระบบเติบโต (ทำงาน 2 ขั้น ขั้นละ 5 วินาที)
+        // 1. ระบบเติบโต (ทำงานตามเวลาที่กำหนดใน PlantData)
         if (currentStage < 2)
         {
             timer += Time.deltaTime;
-            if (timer >= timePerStage)
+            float currentTimePerStage = (currentStage == 0) ? data.timeToSprout : data.timeToMature;
+            if (timer >= currentTimePerStage)
             {
                 currentStage++;
                 timer = 0;
@@ -73,6 +75,8 @@ public class PlantController : MonoBehaviour
             Debug.LogWarning("[PlantController] ไม่มีข้อมูล PlantData ให้แสดง visual");
             return;
         }
+
+        Debug.Log($"[PlantController] UpdateVisuals() stage={currentStage} plant={data.plantName}");
 
         GameObject stagePrefab = null;
         if (currentStage == 0) stagePrefab = data.seedModel;
@@ -115,9 +119,9 @@ public class PlantController : MonoBehaviour
 {
     InventoryManager inventory = FindFirstObjectByType<InventoryManager>();
 
-    if (inventory != null && data != null)
+    if (inventory != null && data != null && data.harvestItem != null)
     {
-        inventory.AddItem(data.harvestItem);
+        inventory.AddItem(data.harvestItem, 1);
         
         // คืนพื้นที่ว่างให้ Grid ก่อนทำลายตัวเอง
         if (spawner != null) spawner.FreeTile(gridPosition);

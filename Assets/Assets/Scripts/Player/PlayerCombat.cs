@@ -1,10 +1,13 @@
 using UnityEngine;
+using UnityEngine.EventSystems;
 
 public class PlayerCombat : MonoBehaviour
 {
     private Weapon currentWeapon;
     private ItemData currentItemData;
     private int currentSlotIndex = -1; 
+    private PlayerFarming playerFarming;
+
     public Transform spawnPoint;
     public LayerMask groundLayer;
 
@@ -12,6 +15,15 @@ public class PlayerCombat : MonoBehaviour
     public float checkRadius = 0.5f; 
     public LayerMask obstacleLayer; 
     public float placementOffset = 0f; 
+
+    void Awake()
+    {
+        playerFarming = GetComponent<PlayerFarming>();
+        if (playerFarming == null)
+        {
+            Debug.LogWarning("[PlayerCombat] ไม่พบ PlayerFarming component บน GameObject เดียวกัน");
+        }
+    }
 
     void Update()
     {
@@ -109,17 +121,26 @@ public class PlayerCombat : MonoBehaviour
 
         if (currentWeapon is Bean beanSentry)
         {
-            beanSentry.SetupSentry(currentItemData.vegetableHealth);
+            beanSentry.SetupSentry(currentItemData.plantData.vegetableHealth);
         }
 
         currentWeapon.ActivateAutoFire();
 
         if (currentSlotIndex != -1)
         {
-            InventoryManager.instance.hotbarInventory[currentSlotIndex] = null;
-            foreach (var slot in FindObjectsOfType<ItemSlot>())
+            InventorySlot slot = InventoryManager.instance.hotbarInventory[currentSlotIndex];
+            if (slot != null && slot.item != null)
             {
-                slot.UpdateSlotUI();
+                slot.amount--;
+                if (slot.amount <= 0)
+                {
+                    slot.item = null;
+                    slot.amount = 0;
+                }
+                foreach (var itemSlot in FindObjectsOfType<ItemSlot>())
+                {
+                    itemSlot.UpdateSlotUI();
+                }
             }
         }
 
@@ -130,24 +151,64 @@ public class PlayerCombat : MonoBehaviour
 
     private void SelectFromHotbar(int index)
     {
-        ItemData selectedItem = InventoryManager.instance.hotbarInventory[index];
-        if (selectedItem != null) EquipItem(selectedItem, index);
+        InventorySlot selectedSlot = InventoryManager.instance.hotbarInventory[index];
+        if (selectedSlot != null && selectedSlot.item != null)
+        {
+            if (selectedSlot.item.itemType == ItemType.Seed)
+            {
+                if (playerFarming != null)
+                {
+                    playerFarming.EquipSeed(selectedSlot.item, index);
+                }
+                else
+                {
+                    Debug.LogError("[PlayerCombat] ไม่พบ PlayerFarming เพื่อปลูกผัก");
+                }
+                return;
+            }
+
+            EquipItem(selectedSlot.item, index);
+        }
     }
 
     public void EquipItem(ItemData item, int index = -1)
     {
-        if (item == null || item.weaponPrefab == null) return;
-        
+        if (item == null)
+        {
+            Debug.LogError("[PlayerCombat] EquipItem เรียกด้วย item เป็น null");
+            return;
+        }
+
+        if (item.itemType == ItemType.Seed)
+        {
+            if (playerFarming != null)
+            {
+                playerFarming.EquipSeed(item, index);
+                return;
+            }
+
+            Debug.LogError("[PlayerCombat] ไม่พบ PlayerFarming เพื่อปลูกผัก");
+            return;
+        }
+
+        currentSlotIndex = index;
+        currentItemData = item;
+        Debug.Log($"[PlayerCombat] EquipItem: {item.itemName} | type={item.itemType} | slotIndex={index}");
+
+        if (item.weaponPrefab == null)
+        {
+            Debug.LogError($"Error: ItemData '{item.itemName}' ไม่มี Weapon Prefab");
+            return;
+        }
+
         if (item.weaponPrefab.name.ToLower().Contains("preview"))
         {
             Debug.LogError($"STOP! ItemData '{item.itemName}' uses a Preview prefab!");
             return;
         }
 
-        currentSlotIndex = index;
         foreach (Transform child in spawnPoint) { Destroy(child.gameObject); }
 
-        currentItemData = item;
         GameObject weaponObj = Instantiate(item.weaponPrefab, spawnPoint);
         currentWeapon = weaponObj.GetComponent<Weapon>();
 

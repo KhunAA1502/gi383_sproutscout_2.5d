@@ -14,7 +14,7 @@ GameObject:
   - component: {fileID: -6704535842645774273}
   - component: {fileID: -3121873674041526338}
   m_Layer: 0
-  m_Name: Bean
+  m_Name: Bean_Weapon_Prefab
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

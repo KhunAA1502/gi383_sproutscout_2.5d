@@ -3,94 +3,207 @@ using UnityEngine.UI;
 using UnityEngine.EventSystems;
 using System.Collections.Generic;
 
-public class ItemSlot : MonoBehaviour, IPointerClickHandler
+public class ItemSlot : MonoBehaviour, IPointerClickHandler, IBeginDragHandler, IDragHandler, IEndDragHandler
 {
     public int slotIndex;
     public bool isHotbar;
     public Image iconImage; // �ҡ Object "Icon" �����㹪�ͧ���
-    public ItemData currentItem;
+    public Text amountText; // เพิ่ม Text สำหรับแสดงจำนวน
+    public InventorySlot currentSlot;
 
-    private void Start() => UpdateSlotUI();
+    private Canvas parentCanvas;
+    private GameObject dragIconObject;
+    private RectTransform dragIconRect;
+    private static ItemSlot draggingSlot;
+
+    private void Start()
+    {
+        parentCanvas = GetComponentInParent<Canvas>();
+        UpdateSlotUI();
+    }
 
     public void UpdateSlotUI()
     {
         if (InventoryManager.instance == null) return;
 
         // �֧������������� Index
-        currentItem = isHotbar ?
+        currentSlot = isHotbar ?
             InventoryManager.instance.hotbarInventory[slotIndex] :
             InventoryManager.instance.mainInventory[slotIndex];
 
-        if (currentItem != null && currentItem.icon != null)
+        if (currentSlot != null && currentSlot.item != null && currentSlot.item.icon != null)
         {
-            iconImage.sprite = currentItem.icon;
-            iconImage.enabled = true; // �ʴ��ٻ (��ѭ���բ�Ǥ�ҧ)
+            iconImage.sprite = currentSlot.item.icon;
+            iconImage.enabled = true;
+
+            // แสดงจำนวนถ้ามากกว่า 1
+            if (currentSlot.amount > 1 && amountText != null)
+            {
+                amountText.text = currentSlot.amount.ToString();
+                amountText.enabled = true;
+            }
+            else if (amountText != null)
+            {
+                amountText.text = "";
+                amountText.enabled = false;
+            }
         }
         else
         {
             iconImage.sprite = null;
-            iconImage.enabled = false; // ��͹�ٻ���������բͧ (��ѭ���բ�Ǥ�ҧ)
+            iconImage.enabled = false;
+            if (amountText != null)
+            {
+                amountText.text = "";
+                amountText.enabled = false;
+            }
         }
     }
 
     public void OnPointerClick(PointerEventData eventData)
     {
-        if (currentItem == null) return;
+        if (currentSlot == null || currentSlot.item == null) return;
 
-        // --- คลิกซ้าย: เพื่อใช้งานหรือเลือกติดตั้งไอเท็ม ---
+        if (!isHotbar) return;
+
         if (eventData.button == PointerEventData.InputButton.Left)
         {
-            if (isHotbar)
-            {
-                // ถ้าเป็นช่อง Hotbar ให้สั่งติดตั้งไอเท็มมาที่ตัวละคร
-                PlayerCombat playerCombat = FindFirstObjectByType<PlayerCombat>();
-                if (playerCombat != null) playerCombat.EquipItem(currentItem, slotIndex);
-            }
-            else
-            {
-                // ถ้าอยู่ในกระเป๋าหลัก ให้ย้ายลง Hotbar
-                MoveItem(InventoryManager.instance.mainInventory, InventoryManager.instance.hotbarInventory);
-            }
+            PlayerCombat playerCombat = FindFirstObjectByType<PlayerCombat>();
+            if (playerCombat != null) playerCombat.EquipItem(currentSlot.item, slotIndex);
         }
-        // --- คลิกขวา: เพื่อย้ายของสลับที่ (Hotbar <-> กระเป๋าหลัก) ---
         else if (eventData.button == PointerEventData.InputButton.Right)
         {
-            if (isHotbar)
-                MoveItem(InventoryManager.instance.hotbarInventory, InventoryManager.instance.mainInventory);
-            else
-                MoveItem(InventoryManager.instance.mainInventory, InventoryManager.instance.hotbarInventory);
+            // อาจเพิ่มคำสั่ง quick move หรือ reorder hotbar ได้ในอนาคต
         }
     }
 
-    private void MoveItem(List<ItemData> fromList, List<ItemData> toList)
+    public void OnBeginDrag(PointerEventData eventData)
     {
-        // 1. �������͡�ҡ��ͧ����ԡ
-        fromList[slotIndex] = null;
+        if (!isHotbar) return;
+        if (currentSlot == null || currentSlot.item == null || iconImage.sprite == null) return;
 
-        // 2. �Ѵ���§����: ����͹�����������͢����᷹����ͧ��ҧ (੾��㹡����Һ�)
+        draggingSlot = this;
+        CreateDragIcon();
+        SetDragIconPosition(eventData);
+    }
+
+    public void OnDrag(PointerEventData eventData)
+    {
+        if (dragIconRect == null) return;
+        SetDragIconPosition(eventData);
+    }
+
+    public void OnEndDrag(PointerEventData eventData)
+    {
+        if (dragIconObject != null)
+        {
+            Destroy(dragIconObject);
+            dragIconObject = null;
+            dragIconRect = null;
+        }
+
+        if (draggingSlot == null) return;
+
+        GameObject target = eventData.pointerCurrentRaycast.gameObject;
+        if (target != null)
+        {
+            ItemSlot targetSlot = target.GetComponentInParent<ItemSlot>();
+            if (targetSlot != null && targetSlot != this && targetSlot.isHotbar && isHotbar)
+            {
+                SwapWith(targetSlot);
+                draggingSlot = null;
+                return;
+            }
+        }
+
+        if (isHotbar && currentSlot != null && currentSlot.item != null && currentSlot.item.itemType == ItemType.Seed)
+        {
+            PlayerFarming playerFarming = FindFirstObjectByType<PlayerFarming>();
+            if (playerFarming != null)
+            {
+                playerFarming.TryPlaceSeedFromScreenPosition(currentSlot.item, slotIndex, eventData.position);
+            }
+        }
+
+        draggingSlot = null;
+    }
+
+    private void CreateDragIcon()
+    {
+        if (parentCanvas == null) return;
+
+        dragIconObject = new GameObject("DragIcon");
+        dragIconObject.transform.SetParent(parentCanvas.transform, false);
+        dragIconObject.transform.SetAsLastSibling();
+
+        dragIconRect = dragIconObject.AddComponent<RectTransform>();
+        dragIconRect.sizeDelta = iconImage.rectTransform.sizeDelta;
+
+        Image dragImage = dragIconObject.AddComponent<Image>();
+        dragImage.sprite = currentSlot.item.icon;
+        dragImage.raycastTarget = false;
+        dragImage.preserveAspect = true;
+    }
+
+    private void SetDragIconPosition(PointerEventData eventData)
+    {
+        if (dragIconRect == null || parentCanvas == null) return;
+
+        Vector2 localPoint;
+        RectTransform canvasRect = parentCanvas.transform as RectTransform;
+        if (RectTransformUtility.ScreenPointToLocalPointInRectangle(canvasRect, eventData.position, eventData.pressEventCamera, out localPoint))
+        {
+            dragIconRect.anchoredPosition = localPoint;
+        }
+    }
+
+    private void SwapWith(ItemSlot targetSlot)
+    {
+        if (InventoryManager.instance == null) return;
+
+        InventorySlot sourceSlot = currentSlot;
+        InventorySlot targetSlotData = targetSlot.currentSlot;
+
+        List<InventorySlot> sourceList = isHotbar ? InventoryManager.instance.hotbarInventory : InventoryManager.instance.mainInventory;
+        List<InventorySlot> targetList = targetSlot.isHotbar ? InventoryManager.instance.hotbarInventory : InventoryManager.instance.mainInventory;
+
+        sourceList[slotIndex] = targetSlotData;
+        targetList[targetSlot.slotIndex] = sourceSlot;
+
+        UpdateSlotUI();
+        targetSlot.UpdateSlotUI();
+
+        Debug.Log($"[ItemSlot] Swapped item from slot {slotIndex} ({(isHotbar ? "Hotbar" : "Inventory")}) to slot {targetSlot.slotIndex} ({(targetSlot.isHotbar ? "Hotbar" : "Inventory")})");
+    }
+
+    private void MoveItem(List<InventorySlot> fromList, List<InventorySlot> toList)
+    {
+        InventorySlot movingSlot = fromList[slotIndex];
+        fromList[slotIndex] = new InventorySlot(); // Clear slot
+
         if (!isHotbar)
         {
+            // Shift items in main inventory
             for (int i = 0; i < fromList.Count - 1; i++)
             {
-                if (fromList[i] == null && fromList[i + 1] != null)
+                if (fromList[i].item == null && fromList[i + 1].item != null)
                 {
                     fromList[i] = fromList[i + 1];
-                    fromList[i + 1] = null;
+                    fromList[i + 1] = new InventorySlot();
                 }
             }
         }
 
-        // 3. ��������ŧ���ʵ���·ҧ (��ͧ��ҧ�á)
+        // Find empty slot in target list
         for (int i = 0; i < toList.Count; i++)
         {
-            if (toList[i] == null)
+            if (toList[i].item == null)
             {
-                toList[i] = currentItem;
+                toList[i] = movingSlot;
                 break;
             }
         }
 
-        // 4. ������ء��ͧ�ѻവ�ٻ˹�Ҩ�����
         foreach (var slot in FindObjectsOfType<ItemSlot>())
         {
             slot.UpdateSlotUI();

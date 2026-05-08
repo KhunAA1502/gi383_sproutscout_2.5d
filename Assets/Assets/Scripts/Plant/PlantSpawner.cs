@@ -9,7 +9,7 @@ public class PlantSpawnerUI : MonoBehaviour
     private bool isPlacing = false;
 
     // Dictionary สำหรับเก็บว่าพิกัดไหนมีผักอยู่แล้ว (Vector2 คือพิกัด X, Y บนพื้น)
-    private static Dictionary<Vector2, bool> occupiedTiles = new Dictionary<Vector2, bool>();
+    public static Dictionary<Vector2, bool> occupiedTiles = new Dictionary<Vector2, bool>();
 
     public void SelectPlant(PlantData data)
     {
