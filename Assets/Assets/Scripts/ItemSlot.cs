@@ -10,6 +10,7 @@ public class ItemSlot : MonoBehaviour, IPointerClickHandler
     public Image iconImage; // �ҡ Object "Icon" �����㹪�ͧ���
     public ItemData currentItem;
 
+
     private void Start() => UpdateSlotUI();
 
     public void UpdateSlotUI()
