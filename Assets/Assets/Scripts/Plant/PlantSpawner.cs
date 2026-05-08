@@ -7,6 +7,9 @@ public class PlantSpawnerUI : MonoBehaviour
     public GameObject plantPrefab;
     private PlantData selectedPlantData;
     private bool isPlacing = false;
+    
+    [Header("Grid Settings")]
+    public float gridSize = 1f; // ขนาดของแต่ละช่องในกริด
 
     // Dictionary สำหรับเก็บว่าพิกัดไหนมีผักอยู่แล้ว (Vector2 คือพิกัด X, Y บนพื้น)
     public static Dictionary<Vector2, bool> occupiedTiles = new Dictionary<Vector2, bool>();
@@ -36,9 +39,19 @@ public class PlantSpawnerUI : MonoBehaviour
 
         if (Physics.Raycast(ray, out hit))
         {
-            // ปลูกที่จุดที่คลิกทันที โดยล็อกค่า Z ให้ลอยออกมาข้างหน้า และล็อกค่า Y ที่ 0.5
-            Vector3 spawnPos = new Vector3(hit.point.x, 0.5f, 0f); 
+            // Snap ตำแหน่งให้ตรงกับ Grid
+            Vector3 snappedPos = SnapToGrid(hit.point);
+            Vector2 gridKey = new Vector2(snappedPos.x, snappedPos.z);
 
+            // ตรวจสอบว่าช่องนี้ว่างหรือไม่
+            if (occupiedTiles.ContainsKey(gridKey) && occupiedTiles[gridKey])
+            {
+                Debug.Log($"<color=red>[PlantSpawner] ช่องนี้มีผักแล้ว!</color> ตำแหน่ง: {gridKey}");
+                isPlacing = false;
+                return;
+            }
+
+            Vector3 spawnPos = new Vector3(snappedPos.x, 0.5f, snappedPos.z);
             Debug.Log($"[PlantSpawner] กำลังปลูก Prefab: {plantPrefab.name} ที่ตำแหน่ง: {spawnPos}");
             
             GameObject newPlant = Instantiate(plantPrefab, spawnPos, Quaternion.identity);
@@ -48,9 +61,12 @@ public class PlantSpawnerUI : MonoBehaviour
             if (controller != null)
             {
                 controller.spawner = this;
-                controller.gridPosition = new Vector2(hit.point.x, hit.point.z);
+                controller.gridPosition = gridKey;
                 Debug.Log($"[PlantSpawner] เรียก Init() กับ: {selectedPlantData?.plantName ?? "ไม่มี"}");
                 controller.Init(selectedPlantData);
+                
+                // Mark ช่องนี้เป็น occupied
+                occupiedTiles[gridKey] = true;
             }
             else
             {
@@ -65,12 +81,21 @@ public class PlantSpawnerUI : MonoBehaviour
         }
     }
 
+    // ฟังก์ชัน Snap to Grid
+    private Vector3 SnapToGrid(Vector3 position)
+    {
+        float x = Mathf.Round(position.x / gridSize) * gridSize;
+        float z = Mathf.Round(position.z / gridSize) * gridSize;
+        return new Vector3(x, position.y, z);
+    }
+
     // ฟังก์ชันสำหรับให้ PlantController เรียกคืนพื้นที่ว่าง
     public void FreeTile(Vector2 pos)
     {
         if (occupiedTiles.ContainsKey(pos))
         {
-            occupiedTiles.Remove(pos);
+            occupiedTiles[pos] = false;
+            Debug.Log($"[PlantSpawner] Free tile: {pos}");
         }
     }
 }

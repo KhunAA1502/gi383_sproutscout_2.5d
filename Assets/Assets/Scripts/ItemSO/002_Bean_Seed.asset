@@ -10,7 +10,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: f0b9e4dca3b15794280757eb21a071c4, type: 3}
-  m_Name: 001_Bean
+  m_Name: 002_Bean_Seed
   m_EditorClassIdentifier: Assembly-CSharp::ItemData
   itemName: Bean
   icon: {fileID: 21300000, guid: 0fb79e27a435e7e42ba380d9257eaa90, type: 3}

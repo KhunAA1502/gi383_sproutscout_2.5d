@@ -12,6 +12,7 @@ public class PlayerFarming : MonoBehaviour
     public float checkRadius = 0.5f;
     public LayerMask obstacleLayer;
     public float placementOffset = 0f;
+    public float gridSize = 1f; // ต้องตรงกับ PlantSpawnerUI.gridSize
 
     void Update()
     {
@@ -92,7 +93,7 @@ public class PlayerFarming : MonoBehaviour
         }
         else
         {
-            Debug.Log("<color=orange>Raycast ไม่โดนพื้น:</color> คลิกไม่โดน Layer ที่กำหนด");
+            Debug.Log($"<color=orange>Raycast ไม่โดนพื้น:</color> Ground Layer Mask = {groundLayer.value}\nลองตรวจสอบว่า Ground Layer รวม Farmland หรือไม่");
         }
     }
 
@@ -102,11 +103,22 @@ public class PlayerFarming : MonoBehaviour
 
         if (!hit.collider.CompareTag("Farmland"))
         {
-            Debug.Log("<color=yellow>วางไม่ได้: สามารถปลูกได้เฉพาะพื้นที่ Dirt เท่านั้น</color>");
+            Debug.Log("<color=yellow>วางไม่ได้: สามารถปลูกได้เฉพาะพื้นที่ Farmland เท่านั้น</color>");
             return;
         }
 
-        Vector3 placePos = hit.point + new Vector3(0, placementOffset, 0);
+        // Snap ตำแหน่งให้ตรงกับ Grid
+        Vector3 snappedPos = SnapToGrid(hit.point);
+        Vector2 gridKey = new Vector2(snappedPos.x, snappedPos.z);
+
+        // ตรวจสอบว่าช่องนี้ว่างหรือไม่
+        if (PlantSpawnerUI.occupiedTiles.ContainsKey(gridKey) && PlantSpawnerUI.occupiedTiles[gridKey])
+        {
+            Debug.Log($"<color=red>[PlayerFarming] ช่องนี้มีผักแล้ว!</color> ตำแหน่ง: {gridKey}");
+            return;
+        }
+
+        Vector3 placePos = new Vector3(snappedPos.x, placementOffset + 0.5f, snappedPos.z);
         Collider[] colliders = Physics.OverlapSphere(placePos, checkRadius, obstacleLayer);
         if (colliders.Length > 0)
         {
@@ -133,6 +145,10 @@ public class PlayerFarming : MonoBehaviour
         {
             Debug.Log($"[PlayerFarming] PlantController พบใน prefab: {newPlant.name}");
             plantController.Init(seedData.plantData);
+            plantController.gridPosition = gridKey;
+            
+            // Mark ช่องนี้เป็น occupied
+            PlantSpawnerUI.occupiedTiles[gridKey] = true;
         }
         else
         {
@@ -142,6 +158,14 @@ public class PlayerFarming : MonoBehaviour
         Debug.Log($"<color=green>ปลูกผักสำเร็จ:</color> {seedData.itemName} ที่ตำแหน่ง {placePos}");
         DecrementHotbarSlot(slotIndex);
         CancelPlanting();
+    }
+
+    // ฟังก์ชันสำหรับ Snap ตำแหน่งให้ตรงกับ Grid
+    private Vector3 SnapToGrid(Vector3 position)
+    {
+        float x = Mathf.Round(position.x / gridSize) * gridSize;
+        float z = Mathf.Round(position.z / gridSize) * gridSize;
+        return new Vector3(x, position.y, z);
     }
 
     private void DecrementHotbarSlot(int slotIndex)
@@ -196,7 +220,7 @@ public class PlayerFarming : MonoBehaviour
         }
         else
         {
-            Debug.Log("<color=orange>Raycast ไม่โดนพื้น:</color> คลิกไม่โดน Layer ที่กำหนด");
+            Debug.Log($"<color=orange>Raycast ไม่โดนพื้น:</color> Ground Layer Mask = {groundLayer.value}\nลองตรวจสอบว่า Ground Layer รวม Farmland หรือไม่");
         }
     }
 }
