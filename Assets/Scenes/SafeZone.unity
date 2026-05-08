@@ -617,6 +617,8 @@ MonoBehaviour:
   eventSystem: {fileID: 0}
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
+<<<<<<< HEAD
 --- !u!114 &288791712
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -638,6 +640,10 @@ MonoBehaviour:
     m_Bits: 0
   placementOffset: 0
   gridSize: 1
+=======
+>>>>>>> parent of a6a4ca1 (Update Main Scene)
+=======
+>>>>>>> parent of a6a4ca1 (Update Main Scene)
 =======
 >>>>>>> parent of a6a4ca1 (Update Main Scene)
 =======
@@ -3279,7 +3285,19 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 9ec07c25af1d7644880900f22f80318e, type: 2}
   - {fileID: 11400000, guid: 603406ddb6356334eabb8283f4e53087, type: 2}
 <<<<<<< HEAD
+<<<<<<< HEAD
+<<<<<<< HEAD
 =======
+=======
+=======
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+>>>>>>> parent of a6a4ca1 (Update Main Scene)
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+>>>>>>> parent of a6a4ca1 (Update Main Scene)
   - {fileID: 0}
   - {fileID: 0}
   - {fileID: 0}
@@ -7380,6 +7398,14 @@ SceneRoots:
   - {fileID: 1703659695}
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
+<<<<<<< HEAD
+=======
+  - {fileID: 1499274908}
+>>>>>>> parent of a6a4ca1 (Update Main Scene)
+=======
+  - {fileID: 1499274908}
+>>>>>>> parent of a6a4ca1 (Update Main Scene)
 =======
   - {fileID: 1499274908}
 >>>>>>> parent of a6a4ca1 (Update Main Scene)
