@@ -7,8 +7,10 @@ public class ItemSlot : MonoBehaviour, IPointerClickHandler
 {
     public int slotIndex;
     public bool isHotbar;
-    public Image iconImage; // �ҡ Object "Icon" �����㹪�ͧ���
-    public ItemData currentItem;
+    public Image iconImage; // อ้างอิง Object "Icon" ของช่อง
+    public InventorySlot currentSlot;
+
+    private ItemData currentItem => currentSlot?.item;
 
     private void Start() => UpdateSlotUI();
 
@@ -16,20 +18,19 @@ public class ItemSlot : MonoBehaviour, IPointerClickHandler
     {
         if (InventoryManager.instance == null) return;
 
-        // �֧������������� Index
-        currentItem = isHotbar ?
+        currentSlot = isHotbar ?
             InventoryManager.instance.hotbarInventory[slotIndex] :
             InventoryManager.instance.mainInventory[slotIndex];
 
         if (currentItem != null && currentItem.icon != null)
         {
             iconImage.sprite = currentItem.icon;
-            iconImage.enabled = true; // �ʴ��ٻ (��ѭ���բ�Ǥ�ҧ)
+            iconImage.enabled = true;
         }
         else
         {
             iconImage.sprite = null;
-            iconImage.enabled = false; // ��͹�ٻ���������բͧ (��ѭ���բ�Ǥ�ҧ)
+            iconImage.enabled = false;
         }
     }
 
@@ -62,36 +63,41 @@ public class ItemSlot : MonoBehaviour, IPointerClickHandler
         }
     }
 
-    private void MoveItem(List<ItemData> fromList, List<ItemData> toList)
+    private void MoveItem(List<InventorySlot> fromList, List<InventorySlot> toList)
     {
-        // 1. �������͡�ҡ��ͧ����ԡ
-        fromList[slotIndex] = null;
+        if (currentSlot == null || currentItem == null) return;
 
-        // 2. �Ѵ���§����: ����͹�����������͢����᷹����ͧ��ҧ (੾��㹡����Һ�)
+        ItemData itemToMove = currentItem;
+        int amountToMove = currentSlot.amount;
+
+        fromList[slotIndex].item = null;
+        fromList[slotIndex].amount = 0;
+
         if (!isHotbar)
         {
             for (int i = 0; i < fromList.Count - 1; i++)
             {
-                if (fromList[i] == null && fromList[i + 1] != null)
+                if (fromList[i].item == null && fromList[i + 1].item != null)
                 {
-                    fromList[i] = fromList[i + 1];
-                    fromList[i + 1] = null;
+                    fromList[i].item = fromList[i + 1].item;
+                    fromList[i].amount = fromList[i + 1].amount;
+                    fromList[i + 1].item = null;
+                    fromList[i + 1].amount = 0;
                 }
             }
         }
 
-        // 3. ��������ŧ���ʵ���·ҧ (��ͧ��ҧ�á)
         for (int i = 0; i < toList.Count; i++)
         {
-            if (toList[i] == null)
+            if (toList[i].item == null)
             {
-                toList[i] = currentItem;
+                toList[i].item = itemToMove;
+                toList[i].amount = amountToMove;
                 break;
             }
         }
 
-        // 4. ������ء��ͧ�ѻവ�ٻ˹�Ҩ�����
-        foreach (var slot in FindObjectsOfType<ItemSlot>())
+        foreach (var slot in FindObjectsByType<ItemSlot>(FindObjectsSortMode.None))
         {
             slot.UpdateSlotUI();
         }

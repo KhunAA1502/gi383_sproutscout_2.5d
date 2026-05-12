@@ -109,15 +109,23 @@ public class PlayerCombat : MonoBehaviour
 
         if (currentWeapon is Bean beanSentry)
         {
-            beanSentry.SetupSentry(currentItemData.vegetableHealth);
+            int health = (currentItemData != null && currentItemData.plantData != null)
+                ? currentItemData.plantData.vegetableHealth
+                : 3;
+            beanSentry.SetupSentry(health);
         }
 
         currentWeapon.ActivateAutoFire();
 
         if (currentSlotIndex != -1)
         {
-            InventoryManager.instance.hotbarInventory[currentSlotIndex] = null;
-            foreach (var slot in FindObjectsOfType<ItemSlot>())
+            InventorySlot hotbarSlot = InventoryManager.instance.hotbarInventory[currentSlotIndex];
+            if (hotbarSlot != null)
+            {
+                hotbarSlot.item = null;
+                hotbarSlot.amount = 0;
+            }
+            foreach (var slot in FindObjectsByType<ItemSlot>(FindObjectsSortMode.None))
             {
                 slot.UpdateSlotUI();
             }
@@ -130,7 +138,8 @@ public class PlayerCombat : MonoBehaviour
 
     private void SelectFromHotbar(int index)
     {
-        ItemData selectedItem = InventoryManager.instance.hotbarInventory[index];
+        InventorySlot selectedSlot = InventoryManager.instance.hotbarInventory[index];
+        ItemData selectedItem = selectedSlot != null ? selectedSlot.item : null;
         if (selectedItem != null) EquipItem(selectedItem, index);
     }
 
