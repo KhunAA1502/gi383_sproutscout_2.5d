@@ -9,8 +9,8 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 7804534238980879738}
-  - component: {fileID: 6628062947069289201}
   - component: {fileID: 3644269661040318271}
+  - component: {fileID: 6213889397698674919}
   m_Layer: 0
   m_Name: PlantPrefab
   m_TagString: Untagged
@@ -33,26 +33,6 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &6628062947069289201
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 910310073723754275}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d3daf5d85a448fb4eaa5250576ca2913, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::PlantController
-  data: {fileID: 11400000, guid: 63b0570d19961f3498796807fc52af4b, type: 2}
-  timePerStage: 5
-  interactDistance: 10
-  seedModel: {fileID: 2805607695158678134, guid: 2f00e91bbd383a04ea5dad80203f84dd, type: 3}
-  seedlingModel: {fileID: 8992961292487196173, guid: e48038302aa9b6547aba97b1a16c0d25, type: 3}
-  matureModel: {fileID: 3823923127662936821, guid: 733c4423176fbe14b8f46f5c786cf769, type: 3}
-  gridPosition: {x: 0, y: 0}
-  spawner: {fileID: 0}
 --- !u!65 &3644269661040318271
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -68,9 +48,26 @@ BoxCollider:
     serializedVersion: 2
     m_Bits: 0
   m_LayerOverridePriority: 0
-  m_IsTrigger: 0
+  m_IsTrigger: 1
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
   m_Size: {x: 1, y: 1, z: 1}
   m_Center: {x: 0, y: 0, z: 0}
+--- !u!114 &6213889397698674919
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 910310073723754275}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 151d1f22126e5e44ba2b535293eb02d7, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PlantController
+  data: {fileID: 11400000, guid: 63b0570d19961f3498796807fc52af4b, type: 2}
+  timePerStage: 5
+  interactDistance: 3
+  gridPosition: {x: 0, y: 0}
+  spawner: {fileID: 0}

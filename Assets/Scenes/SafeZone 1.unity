@@ -258,7 +258,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6d3c2300059368549adf1776923b7055, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PlantSpawnerUI
-  plantPrefab: {fileID: 3843146644299180952, guid: 07399019ca7c7934fbeb88850963a0c8, type: 3}
+  plantPrefab: {fileID: 0}
+  gridSize: 1
 --- !u!4 &146775972
 Transform:
   m_ObjectHideFlags: 0
@@ -512,6 +513,9 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 4389765043622299808, guid: 503c0520403d5f84b998a3f683dd3b58, type: 3}
       insertIndex: -1
       addedObject: {fileID: 288791711}
+    - targetCorrespondingSourceObject: {fileID: 4389765043622299808, guid: 503c0520403d5f84b998a3f683dd3b58, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 288791716}
     - targetCorrespondingSourceObject: {fileID: 7328170898592315991, guid: 503c0520403d5f84b998a3f683dd3b58, type: 3}
       insertIndex: -1
       addedObject: {fileID: 288791703}
@@ -615,6 +619,27 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::InventoryDisplay
   inventoryPanel: {fileID: 337142282}
   eventSystem: {fileID: 961146385}
+--- !u!114 &288791716
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 288791698}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 45d65008eabd942609fffa91b0308e38, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PlayerFarming
+  groundLayer:
+    serializedVersion: 2
+    m_Bits: 256
+  checkRadius: 0.5
+  obstacleLayer:
+    serializedVersion: 2
+    m_Bits: 0
+  placementOffset: 0
+  gridSize: 1
 --- !u!1001 &295346121
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -1986,7 +2011,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6d3c2300059368549adf1776923b7055, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PlantSpawnerUI
-  plantPrefab: {fileID: 910310073723754275, guid: 6a72f19986b2d3d40aea46e6cf6bd61a, type: 3}
+  plantPrefab: {fileID: 0}
+  gridSize: 1
 --- !u!4 &580508905
 Transform:
   m_ObjectHideFlags: 0
@@ -1999,8 +2025,7 @@ Transform:
   m_LocalPosition: {x: 0, y: -0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
-  m_Children:
-  - {fileID: 961146387}
+  m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!224 &593822768 stripped
@@ -3537,39 +3562,71 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::InventoryManager
   mainInventory:
-  - {fileID: 11400000, guid: adf6fdace01ceca499f3ec7b2b673004, type: 2}
-  - {fileID: 11400000, guid: adf6fdace01ceca499f3ec7b2b673004, type: 2}
-  - {fileID: 11400000, guid: adf6fdace01ceca499f3ec7b2b673004, type: 2}
-  - {fileID: 11400000, guid: 668ce7821a5107640b39d110ac8e2c8b, type: 2}
-  - {fileID: 11400000, guid: 8a0d1ebcacd182543a5e11d07c5051af, type: 2}
-  - {fileID: 11400000, guid: 8dde5ee05ebabff4a8cc42264f18f70e, type: 2}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
+  - item: {fileID: 0}
+    amount: 0
+  - item: {fileID: 0}
+    amount: 0
+  - item: {fileID: 0}
+    amount: 0
+  - item: {fileID: 0}
+    amount: 0
+  - item: {fileID: 0}
+    amount: 0
+  - item: {fileID: 0}
+    amount: 0
+  - item: {fileID: 0}
+    amount: 0
+  - item: {fileID: 0}
+    amount: 0
+  - item: {fileID: 0}
+    amount: 0
+  - item: {fileID: 0}
+    amount: 0
+  - item: {fileID: 0}
+    amount: 0
+  - item: {fileID: 0}
+    amount: 0
+  - item: {fileID: 0}
+    amount: 0
+  - item: {fileID: 0}
+    amount: 0
+  - item: {fileID: 0}
+    amount: 0
+  - item: {fileID: 0}
+    amount: 0
+  - item: {fileID: 0}
+    amount: 0
+  - item: {fileID: 0}
+    amount: 0
+  - item: {fileID: 0}
+    amount: 0
+  - item: {fileID: 0}
+    amount: 0
+  - item: {fileID: 0}
+    amount: 0
+  - item: {fileID: 0}
+    amount: 0
+  - item: {fileID: 0}
+    amount: 0
+  - item: {fileID: 0}
+    amount: 0
   hotbarInventory:
-  - {fileID: 11400000, guid: 9ec07c25af1d7644880900f22f80318e, type: 2}
-  - {fileID: 11400000, guid: 603406ddb6356334eabb8283f4e53087, type: 2}
-  - {fileID: 11400000, guid: 668ce7821a5107640b39d110ac8e2c8b, type: 2}
-  - {fileID: 11400000, guid: 8a0d1ebcacd182543a5e11d07c5051af, type: 2}
-  - {fileID: 11400000, guid: 0464f83f093b07a42a54519c6eaa0e86, type: 2}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
+  - item: {fileID: 11400000, guid: 92c869a79ca5745bbabe267df0cc74bb, type: 2}
+    amount: 2
+  - item: {fileID: 0}
+    amount: 0
+  - item: {fileID: 0}
+    amount: 0
+  - item: {fileID: 0}
+    amount: 0
+  - item: {fileID: 0}
+    amount: 0
+  - item: {fileID: 0}
+    amount: 0
+  - item: {fileID: 0}
+    amount: 0
+  - item: {fileID: 0}
+    amount: 0
 --- !u!4 &961146387
 Transform:
   m_ObjectHideFlags: 0
@@ -3583,7 +3640,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 580508905}
+  m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &979765825
 GameObject:
@@ -3597,7 +3654,7 @@ GameObject:
   - component: {fileID: 979765828}
   - component: {fileID: 979765827}
   - component: {fileID: 979765826}
-  m_Layer: 6
+  m_Layer: 8
   m_Name: Farmland (1)
   m_TagString: Farmland
   m_Icon: {fileID: 0}
@@ -4575,7 +4632,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.Image
   m_Material: {fileID: 0}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
-  m_RaycastTarget: 1
+  m_RaycastTarget: 0
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
   m_OnCullStateChanged:
@@ -5792,7 +5849,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6d3c2300059368549adf1776923b7055, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PlantSpawnerUI
-  plantPrefab: {fileID: 6425913787188970549, guid: f0f56cdb758662942ab705aa4871a0c0, type: 3}
+  plantPrefab: {fileID: 0}
+  gridSize: 1
 --- !u!4 &1550725206
 Transform:
   m_ObjectHideFlags: 0
@@ -6363,7 +6421,7 @@ GameObject:
   - component: {fileID: 1696134517}
   - component: {fileID: 1696134516}
   m_Layer: 5
-  m_Name: Inventory Panel (1)
+  m_Name: Hotbar Panel
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -6975,9 +7033,9 @@ GameObject:
   - component: {fileID: 1763009527}
   - component: {fileID: 1763009526}
   - component: {fileID: 1763009525}
-  m_Layer: 6
+  m_Layer: 8
   m_Name: Farmland
-  m_TagString: Platform
+  m_TagString: Farmland
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -7105,7 +7163,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6d3c2300059368549adf1776923b7055, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PlantSpawnerUI
-  plantPrefab: {fileID: 910310073723754275, guid: 812c6489cb64eeb47b1a124a43414228, type: 3}
+  plantPrefab: {fileID: 0}
+  gridSize: 1
 --- !u!4 &1794581198
 Transform:
   m_ObjectHideFlags: 0
@@ -7393,7 +7452,7 @@ GameObject:
   - component: {fileID: 1857595853}
   - component: {fileID: 1857595852}
   - component: {fileID: 1857595851}
-  m_Layer: 6
+  m_Layer: 8
   m_Name: Farmland (3)
   m_TagString: Farmland
   m_Icon: {fileID: 0}
@@ -7611,9 +7670,9 @@ GameObject:
   - component: {fileID: 1918632620}
   - component: {fileID: 1918632619}
   - component: {fileID: 1918632618}
-  m_Layer: 6
+  m_Layer: 8
   m_Name: Farmland (2)
-  m_TagString: Platform
+  m_TagString: Farmland
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -13333,6 +13392,7 @@ SceneRoots:
   - {fileID: 424714401}
   - {fileID: 2130188440}
   - {fileID: 1456100756}
+  - {fileID: 961146387}
   - {fileID: 580508905}
   - {fileID: 1794581198}
   - {fileID: 1550725206}

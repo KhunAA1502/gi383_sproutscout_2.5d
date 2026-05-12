@@ -305,4 +305,7 @@ MonoBehaviour:
   slotIndex: 0
   isHotbar: 0
   iconImage: {fileID: 5587967702843335428}
-  currentItem: {fileID: 0}
+  countText: {fileID: 5070020732442443055}
+  currentSlot:
+    item: {fileID: 0}
+    amount: 0
