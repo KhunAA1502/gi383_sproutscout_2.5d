@@ -258,8 +258,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6d3c2300059368549adf1776923b7055, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PlantSpawnerUI
-  plantPrefab: {fileID: 0}
-  gridSize: 1
 --- !u!4 &146775972
 Transform:
   m_ObjectHideFlags: 0
@@ -1586,6 +1584,7 @@ GameObject:
   m_Component:
   - component: {fileID: 424714401}
   - component: {fileID: 424714400}
+  - component: {fileID: 424714402}
   m_Layer: 0
   m_Name: GameManager
   m_TagString: Untagged
@@ -1622,6 +1621,18 @@ Transform:
   - {fileID: 1462173516}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &424714402
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 424714399}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c55903943d151c94e8372d7814bb0f9d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::HotbarController
 --- !u!1 &440670550
 GameObject:
   m_ObjectHideFlags: 0
@@ -1635,7 +1646,7 @@ GameObject:
   - component: {fileID: 440670552}
   - component: {fileID: 440670551}
   - component: {fileID: 440670555}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Plane
   m_TagString: Ground
   m_Icon: {fileID: 0}
@@ -2011,8 +2022,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6d3c2300059368549adf1776923b7055, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PlantSpawnerUI
-  plantPrefab: {fileID: 0}
-  gridSize: 1
 --- !u!4 &580508905
 Transform:
   m_ObjectHideFlags: 0
@@ -2613,7 +2622,7 @@ GameObject:
   - component: {fileID: 705291063}
   - component: {fileID: 705291062}
   - component: {fileID: 705291061}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Plane (7)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -3654,6 +3663,7 @@ GameObject:
   - component: {fileID: 979765828}
   - component: {fileID: 979765827}
   - component: {fileID: 979765826}
+  - component: {fileID: 979765830}
   m_Layer: 8
   m_Name: Farmland (1)
   m_TagString: Farmland
@@ -3755,6 +3765,23 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &979765830
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 979765825}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7a51d16e1da2a22449eb1922d460806f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Farmland
+  isOccupied: 0
+  gridPosition: {x: 0, y: 0}
+  currentPlant: {fileID: 0}
+  availableMaterial: {fileID: 2100000, guid: 0774901c540d55e4289448939a4edd9f, type: 2}
+  occupiedMaterial: {fileID: 2100000, guid: 0774901c540d55e4289448939a4edd9f, type: 2}
 --- !u!224 &1027519483 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 3196653473396954642, guid: 4215678e31b317a419695a82f75ff5e2, type: 3}
@@ -3906,7 +3933,7 @@ GameObject:
   - component: {fileID: 1167935776}
   - component: {fileID: 1167935775}
   - component: {fileID: 1167935774}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Plane (6)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -4221,7 +4248,7 @@ GameObject:
   - component: {fileID: 1262996489}
   - component: {fileID: 1262996488}
   - component: {fileID: 1262996487}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Plane (4)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -5013,7 +5040,7 @@ GameObject:
   - component: {fileID: 1444615622}
   - component: {fileID: 1444615621}
   - component: {fileID: 1444615620}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Plane (5)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -5148,7 +5175,7 @@ GameObject:
   - component: {fileID: 1455739654}
   - component: {fileID: 1455739653}
   - component: {fileID: 1455739652}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Plane (2)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -5342,12 +5369,12 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1456100753}
   serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: -960.71716, y: -539.59686, z: 0}
+  m_LocalScale: {x: 5.8651834, y: 5.8651834, z: 5.8651834}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 0}
+  m_Father: {fileID: 2130188441}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1001 &1457270137
 PrefabInstance:
@@ -5849,8 +5876,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6d3c2300059368549adf1776923b7055, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PlantSpawnerUI
-  plantPrefab: {fileID: 0}
-  gridSize: 1
 --- !u!4 &1550725206
 Transform:
   m_ObjectHideFlags: 0
@@ -5983,7 +6008,7 @@ GameObject:
   - component: {fileID: 1611636478}
   - component: {fileID: 1611636477}
   - component: {fileID: 1611636476}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Plane
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -6633,7 +6658,7 @@ GameObject:
   - component: {fileID: 1701268827}
   - component: {fileID: 1701268826}
   - component: {fileID: 1701268825}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Area Light
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -6793,7 +6818,7 @@ GameObject:
   - component: {fileID: 1717531819}
   - component: {fileID: 1717531818}
   - component: {fileID: 1717531817}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Plane (3)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -7033,6 +7058,7 @@ GameObject:
   - component: {fileID: 1763009527}
   - component: {fileID: 1763009526}
   - component: {fileID: 1763009525}
+  - component: {fileID: 1763009529}
   m_Layer: 8
   m_Name: Farmland
   m_TagString: Farmland
@@ -7134,6 +7160,23 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1763009529
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1763009524}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7a51d16e1da2a22449eb1922d460806f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Farmland
+  isOccupied: 0
+  gridPosition: {x: 0, y: 1}
+  currentPlant: {fileID: 0}
+  availableMaterial: {fileID: 2100000, guid: 0774901c540d55e4289448939a4edd9f, type: 2}
+  occupiedMaterial: {fileID: 2100000, guid: 0774901c540d55e4289448939a4edd9f, type: 2}
 --- !u!1 &1794581196
 GameObject:
   m_ObjectHideFlags: 0
@@ -7163,8 +7206,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6d3c2300059368549adf1776923b7055, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PlantSpawnerUI
-  plantPrefab: {fileID: 0}
-  gridSize: 1
 --- !u!4 &1794581198
 Transform:
   m_ObjectHideFlags: 0
@@ -7452,6 +7493,7 @@ GameObject:
   - component: {fileID: 1857595853}
   - component: {fileID: 1857595852}
   - component: {fileID: 1857595851}
+  - component: {fileID: 1857595855}
   m_Layer: 8
   m_Name: Farmland (3)
   m_TagString: Farmland
@@ -7553,6 +7595,23 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1857595855
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1857595850}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7a51d16e1da2a22449eb1922d460806f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Farmland
+  isOccupied: 0
+  gridPosition: {x: 0, y: 0}
+  currentPlant: {fileID: 0}
+  availableMaterial: {fileID: 2100000, guid: 0774901c540d55e4289448939a4edd9f, type: 2}
+  occupiedMaterial: {fileID: 2100000, guid: 0774901c540d55e4289448939a4edd9f, type: 2}
 --- !u!1001 &1905249044
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -7670,6 +7729,7 @@ GameObject:
   - component: {fileID: 1918632620}
   - component: {fileID: 1918632619}
   - component: {fileID: 1918632618}
+  - component: {fileID: 1918632622}
   m_Layer: 8
   m_Name: Farmland (2)
   m_TagString: Farmland
@@ -7771,6 +7831,23 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1918632622
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1918632617}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7a51d16e1da2a22449eb1922d460806f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Farmland
+  isOccupied: 0
+  gridPosition: {x: 0, y: 0}
+  currentPlant: {fileID: 0}
+  availableMaterial: {fileID: 2100000, guid: 0774901c540d55e4289448939a4edd9f, type: 2}
+  occupiedMaterial: {fileID: 2100000, guid: 0774901c540d55e4289448939a4edd9f, type: 2}
 --- !u!1 &1979463474 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 4340233401912049209, guid: c97ecdd7fdd975a4f8b21c3f64054328, type: 3}
@@ -8295,10 +8372,13 @@ PrefabInstance:
     m_RemovedGameObjects: []
     m_AddedGameObjects:
     - targetCorrespondingSourceObject: {fileID: 6772350174524252680, guid: c97ecdd7fdd975a4f8b21c3f64054328, type: 3}
-      insertIndex: 4
-      addedObject: {fileID: 1056452295}
+      insertIndex: 0
+      addedObject: {fileID: 1456100756}
     - targetCorrespondingSourceObject: {fileID: 6772350174524252680, guid: c97ecdd7fdd975a4f8b21c3f64054328, type: 3}
       insertIndex: 5
+      addedObject: {fileID: 1056452295}
+    - targetCorrespondingSourceObject: {fileID: 6772350174524252680, guid: c97ecdd7fdd975a4f8b21c3f64054328, type: 3}
+      insertIndex: 6
       addedObject: {fileID: 783191308}
     - targetCorrespondingSourceObject: {fileID: 6772350174524252680, guid: c97ecdd7fdd975a4f8b21c3f64054328, type: 3}
       insertIndex: -1
@@ -13391,7 +13471,6 @@ SceneRoots:
   - {fileID: 288791697}
   - {fileID: 424714401}
   - {fileID: 2130188440}
-  - {fileID: 1456100756}
   - {fileID: 961146387}
   - {fileID: 580508905}
   - {fileID: 1794581198}

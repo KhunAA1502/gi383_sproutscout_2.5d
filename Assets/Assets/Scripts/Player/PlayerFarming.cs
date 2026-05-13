@@ -101,24 +101,24 @@ public class PlayerFarming : MonoBehaviour
     {
         Debug.Log($"[PlayerFarming] Raycast พบพื้น: {hit.point}");
 
-        if (!hit.collider.CompareTag("Farmland"))
+        // ตรวจสอบว่าชนกับ Farmland script หรือไม่
+        Farmland farmland = hit.collider.GetComponent<Farmland>();
+        if (farmland == null)
         {
-            Debug.Log("<color=yellow>วางไม่ได้: สามารถปลูกได้เฉพาะพื้นที่ Farmland เท่านั้น</color>");
+            Debug.Log("<color=yellow>วางไม่ได้: ต้องวางบน Farmland เท่านั้น</color>");
             return;
         }
 
-        // Snap ตำแหน่งให้ตรงกับ Grid
-        Vector3 snappedPos = SnapToGrid(hit.point);
-        Vector2 gridKey = new Vector2(snappedPos.x, snappedPos.z);
-
-        // ตรวจสอบว่าช่องนี้ว่างหรือไม่
-        if (PlantSpawnerUI.occupiedTiles.ContainsKey(gridKey) && PlantSpawnerUI.occupiedTiles[gridKey])
+        if (!farmland.CanPlantHere())
         {
-            Debug.Log($"<color=red>[PlayerFarming] ช่องนี้มีผักแล้ว!</color> ตำแหน่ง: {gridKey}");
+            Debug.Log("<color=red>พื้นที่นี้มีผักอยู่แล้ว!</color>");
             return;
         }
 
-        Vector3 placePos = new Vector3(snappedPos.x, placementOffset + 0.5f, snappedPos.z);
+        // Snap ตำแหน่งให้ตรงกับ grid (ถ้าต้องการ)
+        Vector3 placePos = farmland.transform.position;
+
+        // ตรวจสอบพื้นที่ว่างรอบๆ
         Collider[] colliders = Physics.OverlapSphere(placePos, checkRadius, obstacleLayer);
         if (colliders.Length > 0)
         {
@@ -132,32 +132,17 @@ public class PlayerFarming : MonoBehaviour
             return;
         }
 
-        Debug.Log($"[PlayerFarming] Instantiate plantPrefab: {seedData.plantData.plantPrefab.name} at {placePos}");
-        GameObject newPlant = Instantiate(seedData.plantData.plantPrefab, placePos, Quaternion.identity);
-
-        if (newPlant == null)
+        // ปลูกผ่าน Farmland script
+        if (farmland.PlantSeed(seedData, null)) // TODO: pass PlantSpawnerUI if needed
         {
-            Debug.LogError("[PlayerFarming] Instantiate plantPrefab ล้มเหลว");
-            return;
-        }
-
-        if (newPlant.TryGetComponent(out PlantController plantController))
-        {
-            Debug.Log($"[PlayerFarming] PlantController พบใน prefab: {newPlant.name}");
-            plantController.Init(seedData.plantData);
-            plantController.gridPosition = gridKey;
-            
-            // Mark ช่องนี้เป็น occupied
-            PlantSpawnerUI.occupiedTiles[gridKey] = true;
+            Debug.Log($"<color=green>ปลูกผักสำเร็จ:</color> {seedData.itemName} ที่ตำแหน่ง {placePos}");
+            DecrementHotbarSlot(slotIndex);
+            CancelPlanting();
         }
         else
         {
-            Debug.LogWarning($"[PlayerFarming] Plant prefab ไม่มี PlantController component: {newPlant.name}");
+            Debug.LogError("[PlayerFarming] การปลูกผักล้มเหลว");
         }
-
-        Debug.Log($"<color=green>ปลูกผักสำเร็จ:</color> {seedData.itemName} ที่ตำแหน่ง {placePos}");
-        DecrementHotbarSlot(slotIndex);
-        CancelPlanting();
     }
 
     // ฟังก์ชันสำหรับ Snap ตำแหน่งให้ตรงกับ Grid

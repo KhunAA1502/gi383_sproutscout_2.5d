@@ -10,15 +10,10 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: f0b9e4dca3b15794280757eb21a071c4, type: 3}
-  m_Name: 002_Carrot 1
+  m_Name: Bean_Seed
   m_EditorClassIdentifier: Assembly-CSharp::ItemData
-  itemName: Carrot
-  icon: {fileID: 21300000, guid: 73217738aa1f4484898a9495d96b5ee6, type: 3}
-  itemType: 2
-  vegetableHealth: 10
-  timeToSprout: 5
-  timeToMature: 10
-  seedModelPrefab: {fileID: 0}
-  sproutModelPrefab: {fileID: 0}
-  matureModelPrefab: {fileID: 0}
+  itemName: BeanSeed
+  icon: {fileID: 21300000, guid: 42619d332d7b1ec4db72ecd736db8ac1, type: 3}
+  itemType: 0
+  plantData: {fileID: 11400000, guid: 63b0570d19961f3498796807fc52af4b, type: 2}
   weaponPrefab: {fileID: 0}

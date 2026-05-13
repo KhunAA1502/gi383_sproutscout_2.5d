@@ -498,6 +498,7 @@ GameObject:
   - component: {fileID: 440670552}
   - component: {fileID: 440670551}
   - component: {fileID: 440670555}
+  - component: {fileID: 440670556}
   m_Layer: 6
   m_Name: Plane
   m_TagString: Untagged
@@ -620,6 +621,23 @@ BoxCollider:
   serializedVersion: 3
   m_Size: {x: 10, y: 2.220446e-16, z: 10}
   m_Center: {x: 0, y: 0, z: 0}
+--- !u!114 &440670556
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 440670550}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7a51d16e1da2a22449eb1922d460806f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Farmland
+  isOccupied: 0
+  gridPosition: {x: 0, y: 0}
+  currentPlant: {fileID: 0}
+  availableMaterial: {fileID: 2100000, guid: 0774901c540d55e4289448939a4edd9f, type: 2}
+  occupiedMaterial: {fileID: 2100000, guid: 0774901c540d55e4289448939a4edd9f, type: 2}
 --- !u!1 &484576245
 GameObject:
   m_ObjectHideFlags: 0

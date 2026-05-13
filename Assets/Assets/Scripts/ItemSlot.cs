@@ -10,16 +10,19 @@ public class ItemSlot : MonoBehaviour, IPointerClickHandler, IBeginDragHandler, 
     public bool isHotbar;
     public Image iconImage; // อ้างอิง Object "Icon" ของช่อง
     public TMPro.TextMeshProUGUI countText; // อ้างอิง CountText ใน prefab
+    public Image highlightFrame; // อ้างอิง highlight border frame สำหรับแสดงเลือก
     public InventorySlot currentSlot;
 
     private Canvas parentCanvas;
     private Graphic slotGraphic;
     private static ItemSlot dragSourceSlot;
+    private static ItemSlot selectedHotbarSlot; // slot ที่ผู้เล่นเลือกใน hotbar
     private static GameObject dragIconObject;
     private static Image dragIconImage;
     private static RectTransform dragIconRect;
     private Vector2 dragOffset;
 
+    public ItemData CurrentItem => currentSlot?.item;
     private ItemData currentItem => currentSlot?.item;
 
     private void Start()
@@ -40,6 +43,12 @@ public class ItemSlot : MonoBehaviour, IPointerClickHandler, IBeginDragHandler, 
         if (iconImage != null && iconImage.gameObject != gameObject)
         {
             iconImage.raycastTarget = false;
+        }
+
+        // เริ่มต้น highlight frame ให้ปิด
+        if (highlightFrame != null)
+        {
+            highlightFrame.enabled = false;
         }
 
         parentCanvas = GetComponentInParent<Canvas>();
@@ -94,26 +103,13 @@ public class ItemSlot : MonoBehaviour, IPointerClickHandler, IBeginDragHandler, 
     {
         if (currentItem == null) return;
 
-        // --- คลิกซ้าย: เพื่อใช้งานหรือเลือกติดตั้งไอเท็ม ---
+        // --- คลิกซ้าย: เลือก slot และ equip ไอเท็ม ---
         if (eventData.button == PointerEventData.InputButton.Left)
         {
-            // ถ้าเป็นเมล็ด ให้เริ่มโหมดปลูก
-            if (currentItem.itemType == ItemType.Seed)
-            {
-                PlayerFarming playerFarming = FindFirstObjectByType<PlayerFarming>();
-                if (playerFarming != null)
-                {
-                    playerFarming.EquipSeed(currentItem, slotIndex);
-                    Debug.Log($"[ItemSlot] Started planting mode for {currentItem.itemName}");
-                }
-                return;
-            }
-
+            // เลือก slot (จะจัดการ equip ใน SelectSlot())
             if (isHotbar)
             {
-                // ถ้าเป็นช่อง Hotbar ให้สั่งติดตั้งไอเท็มมาที่ตัวละคร
-                PlayerCombat playerCombat = FindFirstObjectByType<PlayerCombat>();
-                if (playerCombat != null) playerCombat.EquipItem(currentItem, slotIndex);
+                SelectSlot();
             }
             else
             {
@@ -309,5 +305,78 @@ public class ItemSlot : MonoBehaviour, IPointerClickHandler, IBeginDragHandler, 
             out localPointer);
 
         dragIconRect.anchoredPosition = localPointer - dragOffset;
+    }
+
+    // --- ระบบ Hotbar Selection (Highlight) ---
+    public void SelectSlot()
+    {
+        // ถ้าช่องว่าง ไม่เลือก
+        if (currentItem == null)
+        {
+            DeselectSlot();
+            return;
+        }
+
+        // ถ้าเลือก slot เดิม ให้ deselect
+        if (selectedHotbarSlot == this)
+        {
+            DeselectSlot();
+            return;
+        }
+
+        // Deselect slot เดิม
+        if (selectedHotbarSlot != null)
+        {
+            selectedHotbarSlot.DeselectSlot();
+        }
+
+        // Select slot ใหม่
+        selectedHotbarSlot = this;
+        if (highlightFrame != null)
+        {
+            highlightFrame.enabled = true;
+        }
+
+        // จัดการการ equip ตามประเภทไอเท็ม
+        if (currentItem.itemType == ItemType.Seed)
+        {
+            // ปลูกเมล็ด: เริ่มโหมดปลูกทันที
+            PlayerFarming playerFarming = FindFirstObjectByType<PlayerFarming>();
+            if (playerFarming != null)
+            {
+                playerFarming.EquipSeed(currentItem, slotIndex);
+                Debug.Log($"[ItemSlot] Started planting mode for {currentItem.itemName}");
+            }
+        }
+        else if (currentItem.itemType == ItemType.RangedWeapon || currentItem.itemType == ItemType.Melee)
+        {
+            // ติดตั้งอาวุธ
+            PlayerCombat playerCombat = FindFirstObjectByType<PlayerCombat>();
+            if (playerCombat != null)
+            {
+                playerCombat.EquipItem(currentItem, slotIndex);
+                Debug.Log($"[ItemSlot] Equipped weapon {currentItem.itemName}");
+            }
+        }
+
+        Debug.Log($"[ItemSlot] Selected hotbar slot {slotIndex}");
+    }
+
+    public void DeselectSlot()
+    {
+        if (selectedHotbarSlot == this)
+        {
+            if (highlightFrame != null)
+            {
+                highlightFrame.enabled = false;
+            }
+            selectedHotbarSlot = null;
+            Debug.Log($"[ItemSlot] Deselected hotbar slot {slotIndex}");
+        }
+    }
+
+    public static ItemSlot GetSelectedHotbarSlot()
+    {
+        return selectedHotbarSlot;
     }
 }
