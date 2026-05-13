@@ -501,7 +501,7 @@ GameObject:
   - component: {fileID: 440670556}
   m_Layer: 6
   m_Name: Plane
-  m_TagString: Untagged
+  m_TagString: Platform
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 1
@@ -630,12 +630,12 @@ MonoBehaviour:
   m_GameObject: {fileID: 440670550}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 7a51d16e1da2a22449eb1922d460806f, type: 3}
+  m_Script: {fileID: 11500000, guid: e233c64b8f721c149a4014bdaf5239e4, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::Farmland
+  m_EditorClassIdentifier: Assembly-CSharp::WeaponPlatform
   isOccupied: 0
-  gridPosition: {x: 0, y: 0}
-  currentPlant: {fileID: 0}
+  currentWeapon: {fileID: 0}
+  maxWeapons: 2
   availableMaterial: {fileID: 2100000, guid: 0774901c540d55e4289448939a4edd9f, type: 2}
   occupiedMaterial: {fileID: 2100000, guid: 0774901c540d55e4289448939a4edd9f, type: 2}
 --- !u!1 &484576245

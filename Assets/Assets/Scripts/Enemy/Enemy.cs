@@ -104,6 +104,11 @@ public class Enemy : Character, IDamageable
             PickupItem pickup = dropItem.AddComponent<PickupItem>();
             pickup.itemData = randomSeed;
             pickup.amount = 1;
+            
+            // เพิ่ม Collider สำหรับให้เก็บได้
+            SphereCollider collider = dropItem.AddComponent<SphereCollider>();
+            collider.radius = 0.3f;
+            collider.isTrigger = true;
 
             // เพิ่ม visual (Sphere ชั่วคราว)
             GameObject visual = GameObject.CreatePrimitive(PrimitiveType.Sphere);
