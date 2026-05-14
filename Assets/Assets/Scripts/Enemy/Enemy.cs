@@ -17,6 +17,11 @@ public class Enemy : Character, IDamageable
     public float attackRate = 1.0f;      // โจมตีทุกๆกี่วินาที
     private float nextAttackTime = 0f;   // ตัวจับเวลา Cooldown
 
+    [Header("Hit Audio")]
+    public AudioClip hitSfx;
+    [Range(0f, 1f)] public float hitVolume = 1f;
+    private AudioSource audioSource;
+
     private EnemyMovement movement;
     private Transform target;
 
@@ -24,6 +29,15 @@ public class Enemy : Character, IDamageable
     {
         base.Awake();
         movement = GetComponent<EnemyMovement>();
+        audioSource = GetComponent<AudioSource>();
+        if (audioSource == null)
+        {
+            audioSource = gameObject.AddComponent<AudioSource>();
+        }
+        if (audioSource != null)
+        {
+            audioSource.playOnAwake = false;
+        }
 
         // หาเป้าหมาย (Player)
         if (PlayerController.instance != null)
@@ -79,6 +93,10 @@ public class Enemy : Character, IDamageable
     public override void TakeDamage(int damage)
     {
         base.TakeDamage(damage);
+        if (audioSource != null && hitSfx != null)
+        {
+            audioSource.PlayOneShot(hitSfx, hitVolume);
+        }
         Debug.Log($"<color=red><b>HIT!</b></color> {gameObject.name} HP: {currentHP}");
     }
 

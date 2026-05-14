@@ -150,6 +150,8 @@ MonoBehaviour:
   damageAmount: 10
   attackRange: 1.5
   attackRate: 1
+  hitSfx: {fileID: 8300000, guid: f168e8fa71011f34284b22924477e43c, type: 3}
+  hitVolume: 0.5
 --- !u!114 &1862725514527077137
 MonoBehaviour:
   m_ObjectHideFlags: 0

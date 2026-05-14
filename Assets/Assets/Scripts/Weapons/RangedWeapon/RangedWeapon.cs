@@ -12,6 +12,11 @@ public class RangedWeapon : Weapon
     public float fireRate = 1.0f; 
     public LayerMask groundLayer;
 
+    [Header("Audio")]
+    public AudioClip shootSfx;
+    [Range(0f, 1f)] public float shootVolume = 1f;
+    protected AudioSource audioSource;
+
     protected bool isPlaced = false;
     protected bool isCharging = false;
     protected GameObject currentPreview;
@@ -66,6 +71,19 @@ public class RangedWeapon : Weapon
         if (isPlaced) Tick();
     }
 
+    private void Awake()
+    {
+        audioSource = GetComponent<AudioSource>();
+        if (audioSource == null)
+        {
+            audioSource = gameObject.AddComponent<AudioSource>();
+        }
+        if (audioSource != null)
+        {
+            audioSource.playOnAwake = false;
+        }
+    }
+
     public override void Tick()
     {
         if (isPlaced)
@@ -80,6 +98,14 @@ public class RangedWeapon : Weapon
 
     private void HandleRandomFire() { }
 
+    protected void PlayShootSfx()
+    {
+        if (audioSource != null && shootSfx != null)
+        {
+            audioSource.PlayOneShot(shootSfx, shootVolume);
+        }
+    }
+
     protected virtual void FireProjectile(Vector3 direction, float distance)
     {
         if (projectilePrefab == null || throwPoint == null) return;
@@ -87,7 +113,8 @@ public class RangedWeapon : Weapon
         GameObject projObj = Instantiate(projectilePrefab, throwPoint.position, Quaternion.identity);
         if (projObj.TryGetComponent(out Projectile proj))
         {
-            proj.Launch(direction, distance); 
+            proj.Launch(direction, distance);
+            PlayShootSfx();
         }
     }
 

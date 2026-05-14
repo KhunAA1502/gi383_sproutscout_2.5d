@@ -116,6 +116,8 @@ MonoBehaviour:
   groundLayer:
     serializedVersion: 2
     m_Bits: 1
+  shootSfx: {fileID: 8300000, guid: 6411b4ac73c65494a88fa04e8705f998, type: 3}
+  shootVolume: 0.5
 --- !u!120 &-6704535842645774273
 LineRenderer:
   serializedVersion: 3
