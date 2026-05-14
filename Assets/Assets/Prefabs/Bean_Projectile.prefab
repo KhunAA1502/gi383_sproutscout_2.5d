@@ -138,7 +138,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1919faf041ab57143ae0ad85f6245c12, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Projectile
-  damage: 10
+  damage: 100
 --- !u!135 &7139034269872630803
 SphereCollider:
   m_ObjectHideFlags: 0
