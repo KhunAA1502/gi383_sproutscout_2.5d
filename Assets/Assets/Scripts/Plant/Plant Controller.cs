@@ -9,7 +9,6 @@ public class PlantController : MonoBehaviour
 
     public Vector2 gridPosition; // เพิ่มตัวแปรเก็บพิกัดตัวเอง
     public PlantSpawnerUI spawner; // เพิ่มตัวแปรอ้างอิงถึงตัวคุมการวาง
-    public Farmland farmland; // เพิ่มตัวแปรอ้างอิงถึงพื้นที่ปลูก
 
     private GameObject currentVisual;
     private int currentStage = 0; // 0=Seed, 1=Seedling, 2=Mature
@@ -117,25 +116,17 @@ public class PlantController : MonoBehaviour
     }
 
     void CollectPlant()
+{
+    InventoryManager inventory = FindFirstObjectByType<InventoryManager>();
+
+    if (inventory != null && data != null && data.harvestItem != null)
     {
-        // ถ้ามี farmland ให้ใช้ farmland.HarvestPlant()
-        if (farmland != null)
-        {
-            farmland.HarvestPlant();
-        }
-        else
-        {
-            // Fallback สำหรับกรณีไม่มี farmland (backward compatibility)
-            InventoryManager inventory = FindFirstObjectByType<InventoryManager>();
-            if (inventory != null && data != null && data.harvestItem != null)
-            {
-                inventory.AddItem(data.harvestItem, 1);
-            }
+        inventory.AddItem(data.harvestItem, 1);
+        
+        // คืนพื้นที่ว่างให้ Grid ก่อนทำลายตัวเอง
+        if (spawner != null) spawner.FreeTile(gridPosition);
 
-            // คืนพื้นที่ว่างให้ Grid
-            if (spawner != null) spawner.FreeTile(gridPosition);
-
-            Destroy(gameObject);
-        }
+        Destroy(gameObject); 
     }
+}
 }

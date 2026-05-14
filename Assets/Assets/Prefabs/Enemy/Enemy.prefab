@@ -145,11 +145,7 @@ MonoBehaviour:
   characterSprite: {fileID: 8880707404165361962}
   flashColor: {r: 1, g: 0, b: 0, a: 1}
   flashDuration: 0.15
-  seedDatabase: {fileID: 11400000, guid: 595d9e63fc4886e4e8f0f77fd8628f79, type: 2}
-  currentState: 0
-  damageAmount: 10
-  attackRange: 1.5
-  attackRate: 1
+  target: {fileID: 14835071610585012, guid: 503c0520403d5f84b998a3f683dd3b58, type: 3}
 --- !u!114 &1862725514527077137
 MonoBehaviour:
   m_ObjectHideFlags: 0

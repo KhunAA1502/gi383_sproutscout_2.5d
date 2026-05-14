@@ -13,11 +13,7 @@ MonoBehaviour:
   m_Name: BeanData
   m_EditorClassIdentifier: Assembly-CSharp::PlantData
   plantName: Bean
-  vegetableHealth: 0
-  timeToSprout: 5
-  timeToMature: 10
   seedModel: {fileID: 2805607695158678134, guid: 2f00e91bbd383a04ea5dad80203f84dd, type: 3}
   seedlingModel: {fileID: 8992961292487196173, guid: e48038302aa9b6547aba97b1a16c0d25, type: 3}
   matureModel: {fileID: 3823923127662936821, guid: 733c4423176fbe14b8f46f5c786cf769, type: 3}
-  plantPrefab: {fileID: 910310073723754275, guid: 812c6489cb64eeb47b1a124a43414228, type: 3}
-  harvestItem: {fileID: 11400000, guid: 9ec07c25af1d7644880900f22f80318e, type: 2}
+  harvestItem: {fileID: 11400000, guid: 668ce7821a5107640b39d110ac8e2c8b, type: 2}
