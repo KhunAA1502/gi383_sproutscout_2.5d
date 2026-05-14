@@ -30249,6 +30249,18 @@ PrefabInstance:
       propertyPath: m_AnchoredPosition.x
       value: -7.7667236
       objectReference: {fileID: 0}
+    - target: {fileID: 5858070741747773917, guid: aeacb465b7ada5641a4bdd7919833075, type: 3}
+      propertyPath: m_UiScaleMode
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 5858070741747773917, guid: aeacb465b7ada5641a4bdd7919833075, type: 3}
+      propertyPath: m_ReferenceResolution.x
+      value: 1920
+      objectReference: {fileID: 0}
+    - target: {fileID: 5858070741747773917, guid: aeacb465b7ada5641a4bdd7919833075, type: 3}
+      propertyPath: m_ReferenceResolution.y
+      value: 1080
+      objectReference: {fileID: 0}
     - target: {fileID: 6827135992189292705, guid: aeacb465b7ada5641a4bdd7919833075, type: 3}
       propertyPath: m_Pivot.x
       value: 0
@@ -36675,6 +36687,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d20300d62cdb36e4ea3e0c86e7a81848, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::UIManager
+  waitForClickToScene: 0
+  targetSceneName: 
 --- !u!1001 &2134928697
 PrefabInstance:
   m_ObjectHideFlags: 0
