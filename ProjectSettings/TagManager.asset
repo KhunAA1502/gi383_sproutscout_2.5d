@@ -9,6 +9,7 @@ TagManager:
   - Farmland
   - Dirt
   - Platform
+  - EnemyCountText
   layers:
   - Default
   - TransparentFX

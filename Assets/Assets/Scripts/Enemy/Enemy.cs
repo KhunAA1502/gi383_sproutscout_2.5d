@@ -65,19 +65,22 @@ public class Enemy : Character, IDamageable
         }
     }
 
-    public void TakeDamage(int damage)
+    public override void TakeDamage(int damage)
     {
-        currentHP -= damage;
+        base.TakeDamage(damage);
         Debug.Log($"<color=red><b>HIT!</b></color> {gameObject.name} HP: {currentHP}");
-
-        if (currentHP <= 0) Die();
     }
 
-    private void Die()
+    protected override void Die()
     {
         Debug.Log($"<color=yellow>{gameObject.name} DEAD! Dropping seeds...</color>");
         DropRandomSeeds();
-        Destroy(gameObject);
+        
+        // เรียก base.Die() เพื่อส่งสัญญาณ OnDeath ให้ WaveManager รู้
+        base.Die();
+        
+        // ทำลาย Object หลังจากแจ้งเตือนความตายแล้ว
+        Destroy(gameObject, 0.1f);
     }
 
     private void DropRandomSeeds()
