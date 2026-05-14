@@ -4758,6 +4758,10 @@ PrefabInstance:
       propertyPath: m_WasSpriteAssigned
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 3534316861868819802, guid: 503c0520403d5f84b998a3f683dd3b58, type: 3}
+      propertyPath: m_Enabled
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 3542013759674153090, guid: 503c0520403d5f84b998a3f683dd3b58, type: 3}
       propertyPath: m_Enabled
       value: 1
@@ -4798,13 +4802,17 @@ PrefabInstance:
       propertyPath: obstacleLayer.m_Bits
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 6816811372860740843, guid: 503c0520403d5f84b998a3f683dd3b58, type: 3}
+      propertyPath: moveSfx
+      value: 
+      objectReference: {fileID: 8300000, guid: abb842287ce06f44290e63d222c05f57, type: 3}
     - target: {fileID: 7148975314124599085, guid: 503c0520403d5f84b998a3f683dd3b58, type: 3}
       propertyPath: healthText
       value: 
       objectReference: {fileID: 413241399}
     - target: {fileID: 7148975314124599085, guid: 503c0520403d5f84b998a3f683dd3b58, type: 3}
       propertyPath: deathSceneName
-      value: SafeZone1
+      value: SafeZone
       objectReference: {fileID: 0}
     - target: {fileID: 7148975314124599085, guid: 503c0520403d5f84b998a3f683dd3b58, type: 3}
       propertyPath: safeZoneSpawnPoint
@@ -29503,7 +29511,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1703659695}
   m_Layer: 0
-  m_Name: GameObject
+  m_Name: ReSpawn
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -29518,7 +29526,7 @@ Transform:
   m_GameObject: {fileID: 1703659694}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0.2, z: 0}
+  m_LocalPosition: {x: -0.96, y: 0.2, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []

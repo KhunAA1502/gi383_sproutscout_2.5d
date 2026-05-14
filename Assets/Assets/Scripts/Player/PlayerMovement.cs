@@ -1,17 +1,27 @@
 using UnityEngine;
 
-[RequireComponent(typeof(Rigidbody))]
+[RequireComponent(typeof(Rigidbody), typeof(AudioSource))]
 public class PlayerMovement : MonoBehaviour
 {
     [SerializeField] private float moveSpeed = 5f;
+    [SerializeField] private AudioClip moveSfx;
     private float currentSpeed;
     private Rigidbody rb;
+    private AudioSource audioSource;
     private Vector3 input;
     private Vector3 lastMoveDirection;
+    private bool wasMoving;
     public Animator animator;
     public SpriteRenderer sr;
 
-    void Awake() => rb = GetComponent<Rigidbody>();
+    void Awake()
+    {
+        rb = GetComponent<Rigidbody>();
+        audioSource = GetComponent<AudioSource>();
+        audioSource.loop = true;
+        audioSource.playOnAwake = false;
+        if (moveSfx != null) audioSource.clip = moveSfx;
+    }
 
     public void HandleInput()
     {
@@ -25,6 +35,23 @@ public class PlayerMovement : MonoBehaviour
         else if (input.x < 0) sr.flipX = true;
 
         if (input != Vector3.zero) lastMoveDirection = input;
+
+        bool isMoving = input != Vector3.zero;
+        if (isMoving && !wasMoving)
+        {
+            if (moveSfx != null && !audioSource.isPlaying)
+            {
+                audioSource.Play();
+            }
+        }
+        else if (!isMoving && wasMoving)
+        {
+            if (audioSource.isPlaying)
+            {
+                audioSource.Stop();
+            }
+        }
+        wasMoving = isMoving;
     }
 
     void FixedUpdate()
