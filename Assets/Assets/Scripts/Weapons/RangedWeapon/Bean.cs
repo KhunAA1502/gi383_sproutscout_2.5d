@@ -70,7 +70,7 @@ public class Bean : RangedWeapon
         {
             // ยิงไปยังทิศทางศัตรู
             float distance = Vector3.Distance(throwPoint.position, target.position);
-            proj.Launch(direction, Mathf.Clamp(distance, 5f, detectRange));
+            proj.Launch(direction, Mathf.Clamp(distance * 10f, 5f, detectRange));
             PlayShootSfx();
         }
 
