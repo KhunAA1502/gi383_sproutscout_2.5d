@@ -13,18 +13,13 @@ public class PlayerCombat : MonoBehaviour
     public LayerMask obstacleLayer; 
     public float placementOffset = 0f; 
 
-    private void OnEnable()
-    {
-        HotbarController.OnHotbarSlotSelected += HandleHotbarSelection;
-    }
-
-    private void OnDisable()
-    {
-        HotbarController.OnHotbarSlotSelected -= HandleHotbarSelection;
-    }
-
     void Update()
     {
+        for (int i = 0; i < 8; i++)
+        {
+            if (Input.GetKeyDown(KeyCode.Alpha1 + i)) SelectFromHotbar(i);
+        }
+
         if (currentWeapon == null) return;
 
         if (Input.GetMouseButton(0)) currentWeapon.StartUse();
@@ -37,86 +32,45 @@ public class PlayerCombat : MonoBehaviour
         currentWeapon.Tick();
     }
 
-    private void HandleHotbarSelection(int slotIndex, ItemSlot slot)
-    {
-        // HotbarController จัดการการเลือกและ equip แล้ว ไม่ต้องทำอะไรเพิ่ม
-    }
-
     private void TryPlaceItem()
     {
         if (currentWeapon == null || Camera.main == null) return;
 
-        Debug.Log($"[PlayerCombat] TryPlaceItem() - currentItemData={currentItemData?.itemName ?? "null"}");
-
         if (UnityEngine.EventSystems.EventSystem.current != null && 
             UnityEngine.EventSystems.EventSystem.current.IsPointerOverGameObject())
         {
-            Debug.Log("[PlayerCombat] หยุด: เมาส์อยู่บน UI");
             return;
         }
 
         Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
         RaycastHit hit;
 
-        Debug.Log($"[PlayerCombat] Raycast: groundLayer={groundLayer.value}");
-
         if (Physics.Raycast(ray, out hit, 100f, groundLayer))
         {
-            Debug.Log($"[PlayerCombat] Raycast พบ: {hit.collider.name} | Tag: {hit.collider.tag} | Layer: {LayerMask.LayerToName(hit.collider.gameObject.layer)}");
-
             if (hit.collider.gameObject.CompareTag("Player")) 
             {
-                Debug.Log("[PlayerCombat] ชนกับ Player ยกเลิก");
                 currentWeapon.ReleaseUse();
                 return;
             }
 
-            // ตรวจสอบชนิดไอเท็มและพื้นที่
-            if (currentItemData.itemType == ItemType.RangedWeapon)
+            if (CanPlaceHere(hit.collider.gameObject))
             {
-                Debug.Log("[PlayerCombat] เป็น RangedWeapon ค้นหา WeaponPlatform");
+                Collider[] colliders = Physics.OverlapSphere(hit.point, checkRadius, obstacleLayer);
 
-                // วางอาวุธระยะไกลบน Platform
-                WeaponPlatform platform = hit.collider.GetComponent<WeaponPlatform>();
-                if (platform == null)
+                if (colliders.Length == 0) 
                 {
-                    Debug.Log($"<color=yellow>[PlayerCombat] WeaponPlatform is NULL บน {hit.collider.name}</color>");
-                    currentWeapon.ReleaseUse();
-                    return;
-                }
-
-                Debug.Log("[PlayerCombat] พบ WeaponPlatform");
-
-                if (!platform.CanPlaceWeaponHere())
-                {
-                    Debug.Log("<color=red>[PlayerCombat] Platform มีอาวุธอยู่แล้ว!</color>");
-                    currentWeapon.ReleaseUse();
-                    return;
-                }
-
-                Debug.Log("[PlayerCombat] Platform ว่าง เรียก PlaceWeapon()");
-
-                // วางอาวุธผ่าน Platform script
-                if (platform.PlaceWeapon(currentItemData, this))
-                {
-                    Debug.Log($"<color=white>PLACEMENT:</color> วางอาวุธสำเร็จ: {currentItemData.itemName}");
-                    PerformPlacementCleanup();
+                    PerformPlacement(hit.point);
                 }
                 else
                 {
-                    Debug.LogError("[PlayerCombat] PlaceWeapon() return false");
+                    Debug.Log("<color=red>พื้นที่ไม่ว่าง!</color>");
                     currentWeapon.ReleaseUse();
                 }
             }
-            else if (currentItemData.itemType == ItemType.Melee)
-            {
-                Debug.Log("<color=yellow>[PlayerCombat] อาวุธระยะใกล้ ไม่สามารถวางได้</color>");
-                currentWeapon.ReleaseUse();
-            }
             else
             {
-                // กรณีอื่นๆ (ถ้ามี)
-                PerformPlacement(hit.point);
+                Debug.Log("<color=yellow>วางไม่ได้:</color> Tag พื้นไม่ถูกต้อง (" + hit.collider.tag + ") ต้องการ Dirt หรือ Platform");
+                currentWeapon.ReleaseUse();
             }
         }
         else 
@@ -131,8 +85,6 @@ public class PlayerCombat : MonoBehaviour
         if (currentItemData == null) return false;
         if (currentItemData.itemType == ItemType.Seed) return groundObject.CompareTag("Dirt");
         if (currentItemData.itemType == ItemType.RangedWeapon) return groundObject.CompareTag("Platform");
-        // Melee ไม่สามารถวางได้
-        if (currentItemData.itemType == ItemType.Melee) return false;
         return true;
     }
 
@@ -164,41 +116,25 @@ public class PlayerCombat : MonoBehaviour
         }
 
         currentWeapon.ActivateAutoFire();
-    }
 
-    private void PerformPlacementCleanup()
-    {
-        // ลดจำนวนไอเท็ม 1 ชิ้น
-        if (currentSlotIndex != -1 && InventoryManager.instance != null)
+        if (currentSlotIndex != -1)
         {
             InventorySlot hotbarSlot = InventoryManager.instance.hotbarInventory[currentSlotIndex];
-            if (hotbarSlot != null && hotbarSlot.item != null)
+            if (hotbarSlot != null)
             {
-                hotbarSlot.amount--;
-                Debug.Log($"[PlayerCombat] ลดไอเท็ม: {hotbarSlot.item.itemName} เหลือ {hotbarSlot.amount} ชิ้น");
-
-                // ถ้าหมดแล้ว ลบออก
-                if (hotbarSlot.amount <= 0)
-                {
-                    hotbarSlot.item = null;
-                    hotbarSlot.amount = 0;
-                    Debug.Log("[PlayerCombat] ไอเท็มหมดแล้ว ลบออกจาก inventory");
-                }
-
-                // อัปเดต UI
-                foreach (var slot in FindObjectsOfType<ItemSlot>())
-                {
-                    slot.UpdateSlotUI();
-                }
+                hotbarSlot.item = null;
+                hotbarSlot.amount = 0;
+            }
+            foreach (var slot in FindObjectsByType<ItemSlot>(FindObjectsSortMode.None))
+            {
+                slot.UpdateSlotUI();
             }
         }
 
-        // Reset weapon state
         currentWeapon = null;
         currentItemData = null;
         currentSlotIndex = -1;
     }
-    
 
     private void SelectFromHotbar(int index)
     {
@@ -223,9 +159,6 @@ public class PlayerCombat : MonoBehaviour
         currentItemData = item;
         GameObject weaponObj = Instantiate(item.weaponPrefab, spawnPoint);
         currentWeapon = weaponObj.GetComponent<Weapon>();
-
-        // ปรับขนาด weapon preview ให้เล็กลง
-        weaponObj.transform.localScale = Vector3.one * 0.6f;
 
         if (currentWeapon == null)
         {
