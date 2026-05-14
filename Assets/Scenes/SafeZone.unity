@@ -36687,8 +36687,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d20300d62cdb36e4ea3e0c86e7a81848, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::UIManager
-  waitForClickToScene: 0
-  targetSceneName: 
 --- !u!1001 &2134928697
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -37150,7 +37148,6 @@ SceneRoots:
   - {fileID: 2130188440}
   - {fileID: 961146387}
   - {fileID: 1703659695}
-  - {fileID: 155951060}
   - {fileID: 2099319827}
   - {fileID: 1851289939}
   - {fileID: 1063554348}
@@ -37166,3 +37163,4 @@ SceneRoots:
   - {fileID: 1461921134}
   - {fileID: 830971581}
   - {fileID: 378697142}
+  - {fileID: 155951060}
