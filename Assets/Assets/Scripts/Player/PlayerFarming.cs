@@ -16,16 +16,30 @@ public class PlayerFarming : MonoBehaviour
 
     void Update()
     {
+        if (Input.GetMouseButtonDown(1)) // คลิกขวาเพื่อเก็บผัก (Harvest)
+        {
+            TryHarvest();
+        }
+
         if (!IsPlantingSeed) return;
 
         if (Input.GetMouseButtonDown(0))
         {
             TryPlaceSeed();
         }
+    }
 
-        if (Input.GetMouseButtonDown(1))
+    private void TryHarvest()
+    {
+        Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+        if (Physics.Raycast(ray, out RaycastHit hit, 100f, groundLayer))
         {
-            CancelPlanting();
+            Farmland farmland = hit.collider.GetComponent<Farmland>();
+            if (farmland != null)
+            {
+                farmland.HarvestPlant();
+                Debug.Log("[PlayerFarming] คลิกขวา: เก็บผักออกจาก Farmland");
+            }
         }
     }
 
@@ -115,10 +129,10 @@ public class PlayerFarming : MonoBehaviour
             return;
         }
 
-        // Snap ตำแหน่งให้ตรงกับ grid (ถ้าต้องการ)
-        Vector3 placePos = farmland.transform.position;
+        // ใช้ตำแหน่งที่คลิกจริง (hit.point)
+        Vector3 placePos = hit.point;
 
-        // ตรวจสอบพื้นที่ว่างรอบๆ
+        // ตรวจสอบพื้นที่ว่างรอบๆ จุดที่คลิก
         Collider[] colliders = Physics.OverlapSphere(placePos, checkRadius, obstacleLayer);
         if (colliders.Length > 0)
         {
@@ -132,8 +146,8 @@ public class PlayerFarming : MonoBehaviour
             return;
         }
 
-        // ปลูกผ่าน Farmland script
-        if (farmland.PlantSeed(seedData, null)) // TODO: pass PlantSpawnerUI if needed
+        // ปลูกผ่าน Farmland script โดยส่งตำแหน่งที่คลิกไปด้วย
+        if (farmland.PlantSeed(seedData, null, placePos)) 
         {
             Debug.Log($"<color=green>ปลูกผักสำเร็จ:</color> {seedData.itemName} ที่ตำแหน่ง {placePos}");
             DecrementHotbarSlot(slotIndex);

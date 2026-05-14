@@ -25,6 +25,11 @@ public class PlayerCombat : MonoBehaviour
 
     void Update()
     {
+        if (Input.GetMouseButtonDown(1)) // คลิกขวาเพื่อลบอาวุธ
+        {
+            TryRemoveItem();
+        }
+
         if (currentWeapon == null) return;
 
         if (Input.GetMouseButton(0)) currentWeapon.StartUse();
@@ -35,6 +40,22 @@ public class PlayerCombat : MonoBehaviour
         }
 
         currentWeapon.Tick();
+    }
+
+    private void TryRemoveItem()
+    {
+        Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+        RaycastHit hit;
+
+        if (Physics.Raycast(ray, out hit, 100f, groundLayer))
+        {
+            WeaponPlatform platform = hit.collider.GetComponent<WeaponPlatform>();
+            if (platform != null)
+            {
+                platform.RemoveWeapon();
+                Debug.Log("[PlayerCombat] คลิกขวา: ลบอาวุธออกจาก Platform");
+            }
+        }
     }
 
     private void HandleHotbarSelection(int slotIndex, ItemSlot slot)
@@ -96,8 +117,8 @@ public class PlayerCombat : MonoBehaviour
 
                 Debug.Log("[PlayerCombat] Platform ว่าง เรียก PlaceWeapon()");
 
-                // วางอาวุธผ่าน Platform script
-                if (platform.PlaceWeapon(currentItemData, this))
+                // วางอาวุธผ่าน Platform script โดยส่งตำแหน่งที่คลิกไปด้วย
+                if (platform.PlaceWeapon(currentItemData, this, hit.point))
                 {
                     Debug.Log($"<color=white>PLACEMENT:</color> วางอาวุธสำเร็จ: {currentItemData.itemName}");
                     PerformPlacementCleanup();

@@ -258,6 +258,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6d3c2300059368549adf1776923b7055, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PlantSpawnerUI
+  plantPrefab: {fileID: 0}
+  gridSize: 1
 --- !u!4 &146775972
 Transform:
   m_ObjectHideFlags: 0
@@ -1037,7 +1039,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4253977240235866, guid: 47fc15dfca5d9574fa318d4d979a579b, type: 3}
       propertyPath: m_LocalPosition.x
-      value: -7.412
+      value: -6.475
       objectReference: {fileID: 0}
     - target: {fileID: 4253977240235866, guid: 47fc15dfca5d9574fa318d4d979a579b, type: 3}
       propertyPath: m_LocalPosition.y
@@ -1045,7 +1047,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4253977240235866, guid: 47fc15dfca5d9574fa318d4d979a579b, type: 3}
       propertyPath: m_LocalPosition.z
-      value: -3.248
+      value: -2.56
       objectReference: {fileID: 0}
     - target: {fileID: 4253977240235866, guid: 47fc15dfca5d9574fa318d4d979a579b, type: 3}
       propertyPath: m_LocalRotation.w
@@ -2026,6 +2028,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6d3c2300059368549adf1776923b7055, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PlantSpawnerUI
+  plantPrefab: {fileID: 0}
+  gridSize: 1
 --- !u!4 &580508905
 Transform:
   m_ObjectHideFlags: 0
@@ -3625,10 +3629,10 @@ MonoBehaviour:
     amount: 0
   hotbarInventory:
   - item: {fileID: 11400000, guid: 92c869a79ca5745bbabe267df0cc74bb, type: 2}
-    amount: 2
-  - item: {fileID: 0}
+    amount: 5
+  - item: {fileID: 11400000, guid: 9ec07c25af1d7644880900f22f80318e, type: 2}
     amount: 0
-  - item: {fileID: 0}
+  - item: {fileID: 11400000, guid: 9ec07c25af1d7644880900f22f80318e, type: 2}
     amount: 0
   - item: {fileID: 0}
     amount: 0
@@ -3782,8 +3786,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Farmland
   isOccupied: 0
+  maxPlants: 0
   gridPosition: {x: 0, y: 0}
-  currentPlant: {fileID: 0}
   availableMaterial: {fileID: 2100000, guid: 0774901c540d55e4289448939a4edd9f, type: 2}
   occupiedMaterial: {fileID: 2100000, guid: 0774901c540d55e4289448939a4edd9f, type: 2}
 --- !u!224 &1027519483 stripped
@@ -5880,6 +5884,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6d3c2300059368549adf1776923b7055, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PlantSpawnerUI
+  plantPrefab: {fileID: 0}
+  gridSize: 1
 --- !u!4 &1550725206
 Transform:
   m_ObjectHideFlags: 0
@@ -7177,8 +7183,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Farmland
   isOccupied: 0
+  maxPlants: 0
   gridPosition: {x: 0, y: 1}
-  currentPlant: {fileID: 0}
   availableMaterial: {fileID: 2100000, guid: 0774901c540d55e4289448939a4edd9f, type: 2}
   occupiedMaterial: {fileID: 2100000, guid: 0774901c540d55e4289448939a4edd9f, type: 2}
 --- !u!1 &1794581196
@@ -7210,6 +7216,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6d3c2300059368549adf1776923b7055, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PlantSpawnerUI
+  plantPrefab: {fileID: 0}
+  gridSize: 1
 --- !u!4 &1794581198
 Transform:
   m_ObjectHideFlags: 0
@@ -7612,8 +7620,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Farmland
   isOccupied: 0
+  maxPlants: 0
   gridPosition: {x: 0, y: 0}
-  currentPlant: {fileID: 0}
   availableMaterial: {fileID: 2100000, guid: 0774901c540d55e4289448939a4edd9f, type: 2}
   occupiedMaterial: {fileID: 2100000, guid: 0774901c540d55e4289448939a4edd9f, type: 2}
 --- !u!1001 &1905249044
@@ -7848,8 +7856,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Farmland
   isOccupied: 0
+  maxPlants: 0
   gridPosition: {x: 0, y: 0}
-  currentPlant: {fileID: 0}
   availableMaterial: {fileID: 2100000, guid: 0774901c540d55e4289448939a4edd9f, type: 2}
   occupiedMaterial: {fileID: 2100000, guid: 0774901c540d55e4289448939a4edd9f, type: 2}
 --- !u!1 &1979463474 stripped

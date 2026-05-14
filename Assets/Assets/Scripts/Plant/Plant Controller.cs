@@ -121,7 +121,7 @@ public class PlantController : MonoBehaviour
         // ถ้ามี farmland ให้ใช้ farmland.HarvestPlant()
         if (farmland != null)
         {
-            farmland.HarvestPlant();
+            farmland.HarvestPlant(this);
         }
         else
         {
