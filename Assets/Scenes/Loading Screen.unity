@@ -426,7 +426,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::LoadingManager
   progressBar: {fileID: 1331793425}
-  sceneToLoad: SafeZone 1
+  sceneToLoad: SafeZone
 --- !u!4 &407278401
 Transform:
   m_ObjectHideFlags: 0

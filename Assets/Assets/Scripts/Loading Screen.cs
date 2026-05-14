@@ -6,7 +6,7 @@ using System.Collections;
 public class LoadingManager : MonoBehaviour
 {
     public Slider progressBar;
-    public string sceneToLoad = "SafeZone 1"; // ª×èÍ©Ò¡·Õè¤Ø³µéÍ§¡ÒÃ¨Ðä»
+    public string sceneToLoad = "SafeZone"; // ï¿½ï¿½ï¿½Í©Ò¡ï¿½ï¿½ï¿½Ø³ï¿½ï¿½Í§ï¿½ï¿½Ã¨ï¿½ï¿½
 
     void Start()
     {
@@ -22,7 +22,7 @@ public class LoadingManager : MonoBehaviour
         while (!operation.isDone)
         {
             float elapsedTime = Time.time - startTime;
-            // ¤Ó¹Ç³ Progress (¤èÒ¨ÃÔ§¨Ò¡à¤Ã×èÍ§ + àÇÅÒ·ÕèàÃÒÍÂÒ¡´Ö§àªç§äÇé 8 ÇÔ¹Ò·Õ)
+            // ï¿½Ó¹Ç³ Progress (ï¿½ï¿½Ò¨ï¿½Ô§ï¿½Ò¡ï¿½ï¿½ï¿½ï¿½Í§ + ï¿½ï¿½ï¿½Ò·ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ò¡ï¿½Ö§ï¿½ï¿½ï¿½ï¿½ï¿½ 8 ï¿½Ô¹Ò·ï¿½)
             float progress = Mathf.Clamp01(operation.progress / 0.9f);
             float timeProgress = Mathf.Clamp01(elapsedTime / 8.0f);
 
@@ -31,7 +31,7 @@ public class LoadingManager : MonoBehaviour
             if (progressBar != null)
                 progressBar.value = finalProgress;
 
-            // ¶éÒâËÅ´¢éÍÁÙÅàÊÃç¨ áÅÐàÇÅÒ¼èÒ¹ä»¤Ãº 8 ÇÔ¹Ò·ÕáÅéÇ
+            // ï¿½ï¿½ï¿½ï¿½ï¿½Å´ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ò¼ï¿½Ò¹ä»¤Ãº 8 ï¿½Ô¹Ò·ï¿½ï¿½ï¿½ï¿½ï¿½
             if (operation.progress >= 0.9f && elapsedTime >= 8.0f)
             {
                 operation.allowSceneActivation = true;
