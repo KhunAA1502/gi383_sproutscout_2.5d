@@ -249,7 +249,6 @@ public class PlayerFarming : MonoBehaviour
     {
         if (currentSlotIndex != -1 && InventoryManager.instance != null)
         {
-            // เข้าถึงข้อมูลช่องไอเทมใน Hotbar
             InventorySlot hotbarSlot = InventoryManager.instance.hotbarInventory[currentSlotIndex];
 
             if (hotbarSlot != null && hotbarSlot.item != null)
@@ -258,25 +257,55 @@ public class PlayerFarming : MonoBehaviour
 
                 if (hotbarSlot.amount <= 0)
                 {
-                    // ถ้าเมล็ดหมด
                     hotbarSlot.item = null;
                     hotbarSlot.amount = 0;
-                    CancelPlanting(); // ยกเลิกโหมดปลูกและลบ Preview
-                    Debug.Log("[PlayerFarming] เมล็ดหมดแล้ว เคลียร์มือ");
+                    CancelPlanting(); // เมล็ดหมด ลบ Preview ทิ้ง
                 }
                 else
                 {
-                    // ถ้ายังมีเมล็ดเหลือ: ไม่ต้องเรียก CancelPlanting 
-                    // เพื่อให้ IsPlantingSeed ยังเป็น true และ Preview ยังคงอยู่
-                    Debug.Log($"[PlayerFarming] เมล็ดเหลือ {hotbarSlot.amount} อัน สามารถปลูกต่อได้ทันที");
+                    // --- จุดที่ต้องแก้ไข: ถ้าเมล็ดเหลือ ให้ลบ Preview เก่าแล้วสร้างใหม่ทันที ---
+                    // เพื่อป้องกันไม่ให้ Preview ตัวเดิมมัน "โต" ตามตัวที่เพิ่งปลูกลงพื้นไป
+                    if (currentSeedPreview != null)
+                    {
+                        Destroy(currentSeedPreview);
+                    }
+
+                    // สร้าง Preview อันใหม่ที่เป็นร่าง "เมล็ด" ขึ้นมาใหม่
+                    CreateSeedPreview();
+                    Debug.Log($"[PlayerFarming] เมล็ดเหลือ {hotbarSlot.amount} อัน รีเซ็ต Preview ใหม่");
                 }
 
-                // อัปเดต UI ทุกช่อง
+                // อัปเดต UI
                 foreach (var slot in FindObjectsOfType<ItemSlot>())
                 {
                     slot.UpdateSlotUI();
                 }
             }
         }
+    }
+
+    private void CreateSeedPreview()
+    {
+        if (currentSeedData == null || currentSeedData.weaponPrefab == null) return;
+
+        // สร้าง Preview จาก Prefab ที่อยู่ใน ItemData
+        currentSeedPreview = Instantiate(currentSeedData.weaponPrefab, holdPoint.position, holdPoint.rotation, holdPoint);
+
+        // ตั้งค่าให้มันดูเหมือนของที่ถืออยู่ในมือ
+        currentSeedPreview.transform.localPosition = Vector3.zero;
+        currentSeedPreview.transform.localRotation = Quaternion.identity;
+        currentSeedPreview.transform.localScale = Vector3.one * seedPreviewScale;
+
+        // --- ส่วนสำคัญ: ปิดระบบที่ทำให้มัน "โต" หรือ "ยิง" ขณะเป็น Preview ---
+        // ปิด Collider เพื่อไม่ให้มันดีดตัว
+        if (currentSeedPreview.TryGetComponent(out Collider col)) col.enabled = false;
+
+        // ถ้ามีสคริปต์ Bean (ถั่ว) ให้ปิดการทำงานไว้ก่อน (Tick จะได้ไม่รัน)
+        if (currentSeedPreview.TryGetComponent(out Bean bean)) bean.enabled = false;
+
+        // ถ้ามี Rigidbody ให้ตั้งเป็น Kinematic เพื่อไม่ให้มันตกลงพื้น
+        if (currentSeedPreview.TryGetComponent(out Rigidbody rb)) rb.isKinematic = true;
+
+        Debug.Log($"[PlayerFarming] สร้าง Preview สำหรับ: {currentSeedData.itemName}");
     }
 }

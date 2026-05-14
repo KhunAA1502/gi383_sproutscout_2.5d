@@ -109,7 +109,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Bean
   projectilePrefab: {fileID: 3538008323116198882, guid: e43cc4b9c2d2d744b9e1e464049e0613, type: 3}
-  previewPrefab: {fileID: 6794267397835528569}
+  previewPrefab: {fileID: 0}
   throwPoint: {fileID: 4946008780876827141}
   detectRange: 5
   fireRate: 2
