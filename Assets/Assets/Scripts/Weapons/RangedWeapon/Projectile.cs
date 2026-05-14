@@ -28,15 +28,20 @@ public class Projectile : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        // �礡�ê��Ѻ Interface ���� Tag �ͧ�ѵ��[cite: 2]
-        if (other.TryGetComponent(out IDamageable target))
+        // 1. เช็คว่าเป็น Enemy หรือไม่ (ใช้ Tag เพื่อแยกแยะจาก Player)
+        if (other.CompareTag("Enemy"))
         {
-            target.TakeDamage(damage);
-            Destroy(gameObject);
+            if (other.TryGetComponent(out IDamageable target))
+            {
+                target.TakeDamage(damage);
+                Destroy(gameObject);
+            }
         }
+        // 2. ถ้าชนพื้น ให้ทำลายทิ้ง
         else if (other.gameObject.layer == LayerMask.NameToLayer("Ground"))
         {
-            Destroy(gameObject); // �������������[cite: 2]
+            Destroy(gameObject);
         }
     }
-}
+
+    }
