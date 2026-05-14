@@ -9,11 +9,11 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 78cf742a65c6dd748b7686a55276d7bd, type: 3}
+  m_Script: {fileID: 11500000, guid: a279918d66e784c43a31ed1b63602d5e, type: 3}
   m_Name: BeanData
   m_EditorClassIdentifier: Assembly-CSharp::PlantData
   plantName: Bean
-  vegetableHealth: 0
+  vegetableHealth: 3
   timeToSprout: 5
   timeToMature: 10
   seedModel: {fileID: 2805607695158678134, guid: 2f00e91bbd383a04ea5dad80203f84dd, type: 3}
