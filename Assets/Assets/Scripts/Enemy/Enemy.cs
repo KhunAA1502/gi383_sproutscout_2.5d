@@ -3,8 +3,10 @@ using UnityEngine;
 [RequireComponent(typeof(EnemyMovement))]
 public class Enemy : Character, IDamageable
 {
+    
     [Header("Drop Settings")]
-    public SeedDatabase seedDatabase; // ⚠️ ต้อง assign ใน Inspector
+    public GameObject seedDropPrefab; 
+    public SeedDatabase seedDatabase;
 
     public enum State { Chasing, Attacking, Cooldown }
     public State currentState = State.Chasing;
@@ -32,25 +34,34 @@ public class Enemy : Character, IDamageable
 
     void Update()
     {
+
+
         if (target == null || !target.gameObject.activeInHierarchy) return;
 
         float distanceToTarget = Vector3.Distance(transform.position, target.position);
 
-        // ระบบ State Machine อย่างง่าย
+        // ใน Update() ของ Enemy.cs
         if (distanceToTarget <= attackRange)
         {
-            // อยู่ในระยะโจมตี
+            // อยู่ในระยะโจมตี -> สั่งหยุดเดิน
+            movement.Stop();
+
             if (Time.time >= nextAttackTime)
             {
-                Attack();
-                nextAttackTime = Time.time + attackRate;
+                if (Time.time >= nextAttackTime)
+                {
+                    Attack();
+                    nextAttackTime = Time.time + attackRate;
+                }
             }
         }
         else
         {
-            // อยู่นอกระยะ ให้เดินตาม
+            // นอกระยะโจมตี -> ให้เดินต่อ
+            movement.Resume();
             movement.MoveTowards(target.position);
         }
+
     }
 
     private void Attack()
@@ -74,7 +85,7 @@ public class Enemy : Character, IDamageable
     protected override void Die()
     {
         Debug.Log($"<color=yellow>{gameObject.name} DEAD! Dropping seeds...</color>");
-        DropRandomSeeds();
+        DropItems();
         
         // เรียก base.Die() เพื่อส่งสัญญาณ OnDeath ให้ WaveManager รู้
         base.Die();
@@ -83,43 +94,32 @@ public class Enemy : Character, IDamageable
         Destroy(gameObject, 0.1f);
     }
 
-    private void DropRandomSeeds()
+    public void DropItems() // เรียกฟังก์ชันนี้ตอนตาย
     {
-        if (seedDatabase == null)
-        {
-            Debug.LogWarning("[Enemy] seedDatabase ยังไม่ได้ assign!");
-            return;
-        }
+        if (seedDatabase == null || seedDropPrefab == null) return;
 
-        // Random เมล็ด 1-3 ชนิด
-        int seedCount = Random.Range(1, 4);
+        int seedCount = Random.Range(1, 2);
         for (int i = 0; i < seedCount; i++)
         {
             ItemData randomSeed = seedDatabase.GetRandomSeed();
-            if (randomSeed == null || randomSeed.itemType != ItemType.Seed) continue;
+            if (randomSeed == null) continue;
 
-            // สร้าง drop item
-            Vector3 dropPos = transform.position + Random.insideUnitSphere * 0.5f;
-            GameObject dropItem = new GameObject($"SeedDrop_{randomSeed.itemName}");
-            dropItem.transform.position = dropPos;
+            // สุ่มตำแหน่งรอบๆ ตัวศัตรู
+            Vector3 dropPos = transform.position + (Random.insideUnitSphere * 0.7f);
+            dropPos.y = transform.position.y; // ให้ตกลงมาอยู่ที่ระดับพื้นเท่าศัตรู
 
-            // เพิ่ม PickupItem component
-            PickupItem pickup = dropItem.AddComponent<PickupItem>();
-            pickup.itemData = randomSeed;
-            pickup.amount = 1;
-            
-            // เพิ่ม Collider สำหรับให้เก็บได้
-            SphereCollider collider = dropItem.AddComponent<SphereCollider>();
-            collider.radius = 0.3f;
-            collider.isTrigger = true;
+            // --- ใช้การ Instantiate Prefab แทนการสร้างใหม่จากศูนย์ ---
+            GameObject dropItem = Instantiate(seedDropPrefab, dropPos, Quaternion.identity);
 
-            // เพิ่ม visual (Sphere ชั่วคราว)
-            GameObject visual = GameObject.CreatePrimitive(PrimitiveType.Sphere);
-            visual.transform.SetParent(dropItem.transform);
-            visual.transform.localScale = Vector3.one * 0.3f;
-            Destroy(visual.GetComponent<Collider>());
+            // ส่งข้อมูล ItemData เข้าไปในสคริปต์ PickupItem ที่ติดมากับ Prefab
+            if (dropItem.TryGetComponent(out PickupItem pickup))
+            {
+                pickup.itemData = randomSeed;
+                pickup.amount = 1;
+            }
 
-            Debug.Log($"<color=green>[Enemy] Dropped seed: {randomSeed.itemName}</color>");
+            // ถ้าอยากให้ชื่อมันเปลี่ยนตามเมล็ด (ไว้ดูใน Hierarchy)
+            dropItem.name = "SeedDrop_" + randomSeed.itemName;
         }
     }
 }

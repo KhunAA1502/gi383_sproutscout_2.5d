@@ -56,14 +56,14 @@ public class HotbarController : MonoBehaviour
         HandleHotbarKeyInput();
 
         // ถ้าคลิกที่อื่น (ไม่ใช่ UI) และไม่ใช่โหมดปลูก → ปิด highlight
-        if (Input.GetMouseButtonDown(0) && !EventSystem.current.IsPointerOverGameObject())
-        {
-            PlayerFarming playerFarming = FindFirstObjectByType<PlayerFarming>();
-            if (playerFarming == null || !playerFarming.IsPlantingSeed)
-            {
-                DeselectHotbar();
-            }
-        }
+        //if (Input.GetMouseButtonDown(0) && !EventSystem.current.IsPointerOverGameObject())
+        //{
+        //    PlayerFarming playerFarming = FindFirstObjectByType<PlayerFarming>();
+        //    if (playerFarming == null || !playerFarming.IsPlantingSeed)
+        //    {
+        //        DeselectHotbar();
+        //    }
+        //}
     }
 
     private void HandleHotbarKeyInput()
@@ -111,10 +111,18 @@ public class HotbarController : MonoBehaviour
 
     public void DeselectHotbar()
     {
-        ItemSlot selected = ItemSlot.GetSelectedHotbarSlot();
-        if (selected != null)
+        foreach (var slot in hotbarSlots)
         {
-            selected.DeselectSlot();
+            if (slot != null) slot.DeselectSlot();
         }
+
+        // เพิ่มส่วนนี้: สั่งให้ลบ Preview อาวุธและเมล็ดพันธุ์ในมือ
+        PlayerCombat combat = FindFirstObjectByType<PlayerCombat>();
+        if (combat != null) combat.UnequipItem();
+
+        PlayerFarming farming = FindFirstObjectByType<PlayerFarming>();
+        if (farming != null) farming.CancelPlanting();
+
+        Debug.Log("[HotbarController] All slots deselected and hand cleared.");
     }
 }

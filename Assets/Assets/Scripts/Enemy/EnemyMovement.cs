@@ -1,31 +1,51 @@
 using UnityEngine;
+using UnityEngine.AI; // จำเป็นต้องใช้สำหรับ NavMesh
 
 public class EnemyMovement : MonoBehaviour
 {
     [Header("Movement Settings")]
-    public float moveSpeed = 3f;
     public SpriteRenderer enemySprite;
 
-    // ฟังก์ชันสำหรับสั่งให้เดินไปที่จุดเป้าหมาย
+    private NavMeshAgent agent;
+
+    private void Awake()
+    {
+        agent = GetComponent<NavMeshAgent>();
+
+        // สำหรับเกม 2.5D/3D ที่ใช้ Sprite:
+        // ปิดการหมุนตัวของ Agent เพราะเราจะใช้การ Flip Sprite แทน
+        agent.updateRotation = false;
+        agent.updateUpAxis = false;
+    }
+
     public void MoveTowards(Vector3 targetPosition)
     {
-        // คำนวณทิศทาง
-        Vector3 direction = (targetPosition - transform.position).normalized;
-        
-        // เคลื่อนที่ตัวละคร
-        transform.position += direction * moveSpeed * Time.deltaTime;
+        if (agent == null) return;
 
-        // หันหน้าซ้าย-ขวาตามทิศทางที่เดิน
-        if (direction.x > 0) 
+        // สั่งให้ Agent เดินไปที่เป้าหมาย (มันจะหาทางอ้อมสิ่งกีดขวางเอง)
+        agent.SetDestination(targetPosition);
+
+        // การหันหน้า Sprite (เช็คจากความเร็วปัจจุบันของ Agent)
+        if (agent.velocity.x > 0.01f)
             enemySprite.flipX = false;
-        else if (direction.x < 0) 
+        else if (agent.velocity.x < -0.01f)
             enemySprite.flipX = true;
     }
 
-    // ฟังก์ชันสำหรับสั่งหยุดเดิน (เผื่อใช้ในอนาคต)
     public void Stop()
     {
-        // Rigidbody2D rb = GetComponent<Rigidbody2D>();
-        // rb.linearVelocity = Vector2.zero; 
+        if (agent != null && agent.isOnNavMesh)
+        {
+            agent.isStopped = true;
+            agent.velocity = Vector3.zero;
+        }
+    }
+
+    public void Resume()
+    {
+        if (agent != null && agent.isOnNavMesh)
+        {
+            agent.isStopped = false;
+        }
     }
 }

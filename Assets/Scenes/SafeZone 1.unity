@@ -946,6 +946,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6d3c2300059368549adf1776923b7055, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PlantSpawnerUI
+  plantPrefab: {fileID: 0}
+  gridSize: 1
 --- !u!4 &146775972
 Transform:
   m_ObjectHideFlags: 0
@@ -2340,18 +2342,13 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 4389765043622299808, guid: 503c0520403d5f84b998a3f683dd3b58, type: 3}
       insertIndex: -1
       addedObject: {fileID: 288791716}
-    - targetCorrespondingSourceObject: {fileID: 7328170898592315991, guid: 503c0520403d5f84b998a3f683dd3b58, type: 3}
+    - targetCorrespondingSourceObject: {fileID: 4389765043622299808, guid: 503c0520403d5f84b998a3f683dd3b58, type: 3}
       insertIndex: -1
-      addedObject: {fileID: 288791703}
+      addedObject: {fileID: 288791721}
   m_SourcePrefab: {fileID: 100100000, guid: 503c0520403d5f84b998a3f683dd3b58, type: 3}
 --- !u!1 &288791698 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 4389765043622299808, guid: 503c0520403d5f84b998a3f683dd3b58, type: 3}
-  m_PrefabInstance: {fileID: 288791697}
-  m_PrefabAsset: {fileID: 0}
---- !u!1 &288791699 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 7328170898592315991, guid: 503c0520403d5f84b998a3f683dd3b58, type: 3}
   m_PrefabInstance: {fileID: 288791697}
   m_PrefabAsset: {fileID: 0}
 --- !u!4 &288791700 stripped
@@ -2408,27 +2405,6 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 116
   m_CollisionDetection: 0
---- !u!65 &288791703
-BoxCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 288791699}
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
-  m_IsTrigger: 0
-  m_ProvidesContacts: 0
-  m_Enabled: 1
-  serializedVersion: 3
-  m_Size: {x: 0.3194907, y: 0.8, z: 0.93}
-  m_Center: {x: 0.0002626181, y: -0.0022772478, z: 0}
 --- !u!114 &288791711
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2455,6 +2431,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 45d65008eabd942609fffa91b0308e38, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PlayerFarming
+  holdPoint: {fileID: 0}
+  seedPreviewScale: 0.5
   groundLayer:
     serializedVersion: 2
     m_Bits: 256
@@ -2464,6 +2442,27 @@ MonoBehaviour:
     m_Bits: 0
   placementOffset: 0
   gridSize: 1
+--- !u!65 &288791721
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 288791698}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 0.4, y: 0.8, z: 0.1}
+  m_Center: {x: 0, y: 0.2, z: 0}
 --- !u!1001 &295346121
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -3925,7 +3924,6 @@ GameObject:
   m_Component:
   - component: {fileID: 424714401}
   - component: {fileID: 424714400}
-  - component: {fileID: 424714402}
   m_Layer: 0
   m_Name: GameManager
   m_TagString: Untagged
@@ -3962,18 +3960,6 @@ Transform:
   - {fileID: 1462173516}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &424714402
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 424714399}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: c55903943d151c94e8372d7814bb0f9d, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::HotbarController
 --- !u!1 &440670550
 GameObject:
   m_ObjectHideFlags: 0
@@ -5159,6 +5145,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6d3c2300059368549adf1776923b7055, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PlantSpawnerUI
+  plantPrefab: {fileID: 0}
+  gridSize: 1
 --- !u!4 &580508905
 Transform:
   m_ObjectHideFlags: 0
@@ -9517,6 +9505,7 @@ GameObject:
   m_Component:
   - component: {fileID: 961146387}
   - component: {fileID: 961146386}
+  - component: {fileID: 961146388}
   m_Layer: 0
   m_Name: InventoryManager
   m_TagString: Untagged
@@ -9617,6 +9606,18 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &961146388
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 961146385}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c55903943d151c94e8372d7814bb0f9d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::HotbarController
 --- !u!1001 &968416248
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -16193,6 +16194,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6d3c2300059368549adf1776923b7055, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PlantSpawnerUI
+  plantPrefab: {fileID: 0}
+  gridSize: 1
 --- !u!4 &1550725206
 Transform:
   m_ObjectHideFlags: 0
@@ -19009,6 +19012,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6d3c2300059368549adf1776923b7055, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PlantSpawnerUI
+  plantPrefab: {fileID: 0}
+  gridSize: 1
 --- !u!4 &1794581198
 Transform:
   m_ObjectHideFlags: 0

@@ -16,4 +16,4 @@ MonoBehaviour:
   icon: {fileID: 21300000, guid: 42619d332d7b1ec4db72ecd736db8ac1, type: 3}
   itemType: 0
   plantData: {fileID: 11400000, guid: 63b0570d19961f3498796807fc52af4b, type: 2}
-  weaponPrefab: {fileID: 0}
+  weaponPrefab: {fileID: 2805607695158678134, guid: 2f00e91bbd383a04ea5dad80203f84dd, type: 3}

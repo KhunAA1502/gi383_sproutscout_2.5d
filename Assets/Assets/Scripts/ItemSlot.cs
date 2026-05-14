@@ -366,12 +366,15 @@ public class ItemSlot : MonoBehaviour, IPointerClickHandler, IBeginDragHandler, 
     {
         if (selectedHotbarSlot == this)
         {
-            if (highlightFrame != null)
-            {
-                highlightFrame.enabled = false;
-            }
+            if (highlightFrame != null) highlightFrame.enabled = false;
             selectedHotbarSlot = null;
-            Debug.Log($"[ItemSlot] Deselected hotbar slot {slotIndex}");
+
+            // ต้องมีบรรทัดพวกนี้เพื่อให้ Preview หายไปเวลาเรากดยกเลิกช่อง
+            PlayerCombat combat = FindFirstObjectByType<PlayerCombat>();
+            if (combat != null) combat.UnequipItem();
+
+            PlayerFarming farming = FindFirstObjectByType<PlayerFarming>();
+            if (farming != null) farming.CancelPlanting();
         }
     }
 

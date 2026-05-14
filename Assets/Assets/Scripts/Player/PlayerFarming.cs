@@ -5,9 +5,12 @@ public class PlayerFarming : MonoBehaviour
 {
     private ItemData currentSeedData;
     private int currentSlotIndex = -1;
+    private GameObject currentSeedPreview;
     public bool IsPlantingSeed { get; private set; }
 
     [Header("Farming Settings")]
+    public Transform holdPoint;
+    public float seedPreviewScale = 0.5f;
     public LayerMask groundLayer;
     public float checkRadius = 0.5f;
     public LayerMask obstacleLayer;
@@ -61,6 +64,8 @@ public class PlayerFarming : MonoBehaviour
         currentSlotIndex = slotIndex;
         IsPlantingSeed = true;
 
+        SpawnSeedPreview();
+
         Debug.Log($"[PlayerFarming] เลือกเมล็ดสำหรับปลูก: {seedData.itemName} (slot {slotIndex})");
     }
 
@@ -72,6 +77,7 @@ public class PlayerFarming : MonoBehaviour
         IsPlantingSeed = false;
         currentSeedData = null;
         currentSlotIndex = -1;
+        DestroySeedPreview();
     }
 
     public void TryPlaceSeedFromScreenPosition(ItemData seedData, int slotIndex, Vector2 screenPosition)
@@ -113,49 +119,15 @@ public class PlayerFarming : MonoBehaviour
 
     private void ProcessSeedPlacement(ItemData seedData, int slotIndex, RaycastHit hit)
     {
-        Debug.Log($"[PlayerFarming] Raycast พบพื้น: {hit.point}");
-
-        // ตรวจสอบว่าชนกับ Farmland script หรือไม่
         Farmland farmland = hit.collider.GetComponent<Farmland>();
-        if (farmland == null)
+        if (farmland != null && farmland.CanPlantHere())
         {
-            Debug.Log("<color=yellow>วางไม่ได้: ต้องวางบน Farmland เท่านั้น</color>");
-            return;
-        }
-
-        if (!farmland.CanPlantHere())
-        {
-            Debug.Log("<color=red>พื้นที่นี้มีผักอยู่แล้ว!</color>");
-            return;
-        }
-
-        // ใช้ตำแหน่งที่คลิกจริง (hit.point)
-        Vector3 placePos = hit.point;
-
-        // ตรวจสอบพื้นที่ว่างรอบๆ จุดที่คลิก
-        Collider[] colliders = Physics.OverlapSphere(placePos, checkRadius, obstacleLayer);
-        if (colliders.Length > 0)
-        {
-            Debug.Log("<color=red>พื้นที่ไม่ว่างสำหรับปลูกผัก!</color>");
-            return;
-        }
-
-        if (seedData.plantData == null || seedData.plantData.plantPrefab == null)
-        {
-            Debug.LogError($"[PlayerFarming] Planting failed: plantPrefab หรือ plantData ยังไม่ได้ตั้งค่าใน ItemData ({seedData.itemName})");
-            return;
-        }
-
-        // ปลูกผ่าน Farmland script โดยส่งตำแหน่งที่คลิกไปด้วย
-        if (farmland.PlantSeed(seedData, null, placePos)) 
-        {
-            Debug.Log($"<color=green>ปลูกผักสำเร็จ:</color> {seedData.itemName} ที่ตำแหน่ง {placePos}");
-            DecrementHotbarSlot(slotIndex);
-            CancelPlanting();
-        }
-        else
-        {
-            Debug.LogError("[PlayerFarming] การปลูกผักล้มเหลว");
+            Vector3 placePos = hit.point;
+            if (farmland.PlantSeed(seedData, null, placePos))
+            {
+                // ปรับจากเดิมที่อาจจะสั่ง CancelPlanting() ให้มาใช้ Cleanup แทน
+                PerformPlantingCleanup();
+            }
         }
     }
 
@@ -186,6 +158,57 @@ public class PlayerFarming : MonoBehaviour
             {
                 itemSlot.UpdateSlotUI();
             }
+        }
+    }
+
+    private void SpawnSeedPreview()
+    {
+        DestroySeedPreview();
+
+        if (holdPoint == null)
+        {
+            PlayerCombat combat = FindFirstObjectByType<PlayerCombat>();
+            if (combat != null)
+            {
+                holdPoint = combat.spawnPoint;
+            }
+        }
+
+        if (holdPoint == null || currentSeedData == null || currentSeedData.plantData == null || currentSeedData.plantData.plantPrefab == null)
+        {
+            return;
+        }
+
+        currentSeedPreview = Instantiate(currentSeedData.plantData.plantPrefab, holdPoint.position, holdPoint.rotation, holdPoint);
+        currentSeedPreview.transform.localPosition = Vector3.zero;
+        currentSeedPreview.transform.localRotation = Quaternion.identity;
+        currentSeedPreview.transform.localScale = Vector3.one * seedPreviewScale;
+
+        // ป้องกันให้ preview ไม่ชนกับอะไร
+        foreach (var collider in currentSeedPreview.GetComponentsInChildren<Collider>())
+        {
+            collider.enabled = false;
+        }
+        foreach (var collider2D in currentSeedPreview.GetComponentsInChildren<Collider2D>())
+        {
+            collider2D.enabled = false;
+        }
+        foreach (var rb in currentSeedPreview.GetComponentsInChildren<Rigidbody>())
+        {
+            Destroy(rb);
+        }
+        foreach (var rb2D in currentSeedPreview.GetComponentsInChildren<Rigidbody2D>())
+        {
+            Destroy(rb2D);
+        }
+    }
+
+    private void DestroySeedPreview()
+    {
+        if (currentSeedPreview != null)
+        {
+            Destroy(currentSeedPreview);
+            currentSeedPreview = null;
         }
     }
 
@@ -220,6 +243,40 @@ public class PlayerFarming : MonoBehaviour
         else
         {
             Debug.Log($"<color=orange>Raycast ไม่โดนพื้น:</color> Ground Layer Mask = {groundLayer.value}\nลองตรวจสอบว่า Ground Layer รวม Farmland หรือไม่");
+        }
+    }
+    private void PerformPlantingCleanup()
+    {
+        if (currentSlotIndex != -1 && InventoryManager.instance != null)
+        {
+            // เข้าถึงข้อมูลช่องไอเทมใน Hotbar
+            InventorySlot hotbarSlot = InventoryManager.instance.hotbarInventory[currentSlotIndex];
+
+            if (hotbarSlot != null && hotbarSlot.item != null)
+            {
+                hotbarSlot.amount--; // ลดจำนวนเมล็ด
+
+                if (hotbarSlot.amount <= 0)
+                {
+                    // ถ้าเมล็ดหมด
+                    hotbarSlot.item = null;
+                    hotbarSlot.amount = 0;
+                    CancelPlanting(); // ยกเลิกโหมดปลูกและลบ Preview
+                    Debug.Log("[PlayerFarming] เมล็ดหมดแล้ว เคลียร์มือ");
+                }
+                else
+                {
+                    // ถ้ายังมีเมล็ดเหลือ: ไม่ต้องเรียก CancelPlanting 
+                    // เพื่อให้ IsPlantingSeed ยังเป็น true และ Preview ยังคงอยู่
+                    Debug.Log($"[PlayerFarming] เมล็ดเหลือ {hotbarSlot.amount} อัน สามารถปลูกต่อได้ทันที");
+                }
+
+                // อัปเดต UI ทุกช่อง
+                foreach (var slot in FindObjectsOfType<ItemSlot>())
+                {
+                    slot.UpdateSlotUI();
+                }
+            }
         }
     }
 }

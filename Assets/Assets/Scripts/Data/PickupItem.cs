@@ -14,14 +14,14 @@ public class PickupItem : MonoBehaviour
         }
     }
 
-    private void OnTriggerEnter2D(Collider2D other)
-    {
-        // สำหรับเกม 2D
-        if (other.CompareTag("Player"))
-        {
-            PickupItemLogic();
-        }
-    }
+    //private void OnTriggerEnter2D(Collider2D other)
+    //{
+    //    // สำหรับเกม 2D
+    //    if (other.CompareTag("Player"))
+    //    {
+    //        PickupItemLogic();
+    //    }
+    //}
 
     private void PickupItemLogic()
     {

@@ -189,37 +189,36 @@ public class PlayerCombat : MonoBehaviour
 
     private void PerformPlacementCleanup()
     {
-        // ลดจำนวนไอเท็ม 1 ชิ้น
         if (currentSlotIndex != -1 && InventoryManager.instance != null)
         {
             InventorySlot hotbarSlot = InventoryManager.instance.hotbarInventory[currentSlotIndex];
             if (hotbarSlot != null && hotbarSlot.item != null)
             {
-                hotbarSlot.amount--;
-                Debug.Log($"[PlayerCombat] ลดไอเท็ม: {hotbarSlot.item.itemName} เหลือ {hotbarSlot.amount} ชิ้น");
+                hotbarSlot.amount--; // ลดจำนวนลง
 
-                // ถ้าหมดแล้ว ลบออก
                 if (hotbarSlot.amount <= 0)
                 {
+                    // ถ้าของหมดเกลี้ยงช่อง
                     hotbarSlot.item = null;
                     hotbarSlot.amount = 0;
-                    Debug.Log("[PlayerCombat] ไอเท็มหมดแล้ว ลบออกจาก inventory");
+                    UnequipItem(); // เคลียร์มือเฉพาะตอนหมด
+                }
+                else
+                {
+                    // --- จุดสำคัญ: ถ้ายังมีของเหลือ ให้ถืออันเดิมต่อทันที ---
+                    // ไม่ต้องทำลายทิ้งแล้วสร้างใหม่ แค่ปล่อยให้ตัวแปรยังถืออันเดิมอยู่
+                    // เพื่อให้กดคลิกซ้ายวางต่อได้เลย
                 }
 
-                // อัปเดต UI
+                // อัปเดต UI ให้ตัวเลขลดลง
                 foreach (var slot in FindObjectsOfType<ItemSlot>())
                 {
                     slot.UpdateSlotUI();
                 }
             }
         }
-
-        // Reset weapon state
-        currentWeapon = null;
-        currentItemData = null;
-        currentSlotIndex = -1;
     }
-    
+
 
     private void SelectFromHotbar(int index)
     {
@@ -242,10 +241,12 @@ public class PlayerCombat : MonoBehaviour
         foreach (Transform child in spawnPoint) { Destroy(child.gameObject); }
 
         currentItemData = item;
-        GameObject weaponObj = Instantiate(item.weaponPrefab, spawnPoint);
+        GameObject weaponObj = Instantiate(item.weaponPrefab, spawnPoint.position, spawnPoint.rotation, spawnPoint);
         currentWeapon = weaponObj.GetComponent<Weapon>();
 
-        // ปรับขนาด weapon preview ให้เล็กลง
+        // แสดงไอเทมเหมือนผู้เล่นถืออยู่: รีเซ็ตตำแหน่ง/การหมุน และปรับสเกล
+        weaponObj.transform.localPosition = Vector3.zero;
+        weaponObj.transform.localRotation = Quaternion.identity;
         weaponObj.transform.localScale = Vector3.one * 0.6f;
 
         if (currentWeapon == null)
@@ -257,4 +258,22 @@ public class PlayerCombat : MonoBehaviour
             Debug.Log($"<color=cyan>EQUIPPED:</color> {weaponObj.name}");
         }
     }
+
+    public void UnequipItem()
+    {
+        if (spawnPoint != null)
+        {
+            foreach (Transform child in spawnPoint)
+            {
+                Destroy(child.gameObject);
+            }
+        }
+
+        currentWeapon = null;
+        currentItemData = null;
+        currentSlotIndex = -1;
+
+        Debug.Log("[PlayerCombat] Unequipped item and cleared preview.");
+    }
 }
+

@@ -11,7 +11,7 @@ public class Projectile : MonoBehaviour
     public void Launch(Vector3 direction, float distance)
     {
         rb.useGravity = true;
-        float upForce = distance * 0.5f; // �ӹǳ�ç¡������ع����[cite: 2]
+        float upForce = distance * 0.8f; // �ӹǳ�ç¡������ع����[cite: 2]
         Vector3 force = (direction * distance) + (Vector3.up * upForce);
 
         rb.AddForce(force, ForceMode.Impulse);
