@@ -69,6 +69,7 @@ MonoBehaviour:
   data: {fileID: 11400000, guid: 63b0570d19961f3498796807fc52af4b, type: 2}
   timePerStage: 5
   interactDistance: 3
+  harvestSFX: {fileID: 8300000, guid: a7dd4fb9ad00ba34aaeda623291bcfbb, type: 3}
   gridPosition: {x: 0, y: 0}
   spawner: {fileID: 0}
   farmland: {fileID: 0}

@@ -3,7 +3,6 @@ using UnityEngine;
 public class Bean : RangedWeapon
 {
     private int ammo = 3;
-    private float nextFireTime;
 
     // ฟังก์ชันที่ PlayerCombat.cs จะเป็นคนเรียกใช้
     public void SetupSentry(int healthFromData)

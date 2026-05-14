@@ -16,7 +16,7 @@ public class RangedWeapon : Weapon
     protected bool isCharging = false;
     protected GameObject currentPreview;
     protected float fixedY; 
-    private float nextFireTime;
+    protected float nextFireTime;
 
     public override void StartUse()
     {

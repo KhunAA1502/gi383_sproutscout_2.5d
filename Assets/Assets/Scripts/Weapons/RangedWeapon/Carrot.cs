@@ -3,7 +3,6 @@
 public class Carrot : RangedWeapon
 {
     private int ammo = 5; // Carrot has more ammo than Bean
-    private float nextFireTime;
 
     public void SetupSentry(int healthFromData)
     {

@@ -7,6 +7,9 @@ public class PlantController : MonoBehaviour
     public float timePerStage = 5f; // ปรับเป็น 5 วินาทีตามที่ต้องการ
     public float interactDistance = 3f; // ระยะที่เหมาะสมสำหรับเกม 2.5D
 
+    [Header("Audio")]
+    public AudioClip harvestSFX; // เสียงเก็บผัก
+
     public Vector2 gridPosition; // เพิ่มตัวแปรเก็บพิกัดตัวเอง
     public PlantSpawnerUI spawner; // เพิ่มตัวแปรอ้างอิงถึงตัวคุมการวาง
     public Farmland farmland; // เพิ่มตัวแปรอ้างอิงถึงพื้นที่ปลูก
@@ -118,6 +121,11 @@ public class PlantController : MonoBehaviour
 
     void CollectPlant()
     {
+        if (harvestSFX != null)
+        {
+            AudioSource.PlayClipAtPoint(harvestSFX, transform.position);
+        }
+
         // ถ้ามี farmland ให้ใช้ farmland.HarvestPlant()
         if (farmland != null)
         {
