@@ -6,8 +6,14 @@ EditorBuildSettings:
   serializedVersion: 2
   m_Scenes:
   - enabled: 1
-    path: Assets/Scenes/SafeZone.unity
-    guid: 99c9720ab356a0642a771bea13969a05
+    path: Assets/Assets/Main Screen Update.unity
+    guid: 7c7da5840e7b1bf4884e7a747dafb8ee
+  - enabled: 1
+    path: Assets/Scenes/Loading Screen.unity
+    guid: 6572f9b963ef607488ecf602d56705c5
+  - enabled: 1
+    path: Assets/Scenes/SafeZone 1.unity
+    guid: f2f958d9728ffb54e8cc5d1e5412f518
   - enabled: 1
     path: Assets/Scenes/Floor01.unity
     guid: 442c3eea6021939489d295521cd7e8cd
