@@ -21,16 +21,16 @@ MonoBehaviour:
     m_Value: 1
   intensity:
     m_OverrideState: 1
-    m_Value: 10
+    m_Value: 5
   scatter:
     m_OverrideState: 1
-    m_Value: 1
+    m_Value: 0.005
   clamp:
     m_OverrideState: 1
     m_Value: 5
   tint:
     m_OverrideState: 1
-    m_Value: {r: 0.21115166, g: 0.28188375, b: 0.6132076, a: 1}
+    m_Value: {r: 0.5743205, g: 0.29423285, b: 0.7169812, a: 1}
   highQualityFiltering:
     m_OverrideState: 1
     m_Value: 1
@@ -71,10 +71,10 @@ MonoBehaviour:
     m_Value: {x: 0.5, y: 0.5}
   intensity:
     m_OverrideState: 1
-    m_Value: 0.265
+    m_Value: 0.247
   smoothness:
     m_OverrideState: 1
-    m_Value: 0.563
+    m_Value: 0.73
   rounded:
     m_OverrideState: 1
     m_Value: 1
@@ -151,7 +151,7 @@ MonoBehaviour:
   active: 1
   shadows:
     m_OverrideState: 1
-    m_Value: {x: 0.9221766, y: 0.85179996, z: 1, w: 0}
+    m_Value: {x: 0.9373501, y: 0.8513487, z: 1, w: 0}
   midtones:
     m_OverrideState: 1
     m_Value: {x: 0.84041846, y: 0.83602613, z: 1, w: 0}
